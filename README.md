@@ -72,6 +72,7 @@ npx @profullstack/footer html --site https://example.com/ --link Docs=/docs
 | `ring` | `{ slug: 'profullstack', name: 'Profullstack', host: 'https://rssamplifier.com' }` | |
 | `css` | `true` | `false` drops the `<style>`; style `.pfs-footer*` yourself |
 | `houseLinks` | `true` | `false` hides links the template adds for every site |
+| `nonce` | | CSP nonce for the inline `<style>`; or `css: false` and style `.pfs-footer*` yourself |
 
 Theme it with `--pfs-footer-muted`, `--pfs-footer-gap` and `--pfs-footer-size` on
 `.pfs-footer`; colors otherwise inherit from the page.

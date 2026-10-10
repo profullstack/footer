@@ -109,6 +109,7 @@ export function fill(tpl, vars) {
  *   ring?: { slug?: string, name?: string, host?: string },
  *   css?: boolean,
  *   houseLinks?: boolean,
+ *   nonce?: string,
  * }} FooterOptions
  * @typedef {{ version: string, renderer: number, css: string, link: string, footer: string, houseLinks?: FooterLink[] }} FooterTemplate
  */
@@ -141,6 +142,7 @@ export function renderFooter(template, opts) {
     tagline: opts.tagline ?? '',
     site: canonicalSite(opts.site),
     name: opts.name ?? '',
+    nonce: opts.nonce ?? '',
   });
 }
 

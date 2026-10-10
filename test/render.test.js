@@ -108,3 +108,9 @@ test('template.json is built from template.js at the package version', () => {
   const json = JSON.parse(readFileSync(new URL('../template.json', import.meta.url), 'utf8'));
   assert.deepEqual(json, { ...template, version: pkg.version }, 'run `npm run build`');
 });
+
+test('nonce lands on the style tag, escaped', () => {
+  const html = renderFooter(template, { site: 'a.test', nonce: 'abc"x' });
+  assert.ok(html.includes('<style nonce="abc&quot;x">'));
+  assert.ok(renderFooter(template, { site: 'a.test' }).includes('<style>'));
+});
