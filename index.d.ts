@@ -18,6 +18,8 @@ export interface FooterOptions {
   css?: boolean;
   /** false hides the template's house links. */
   houseLinks?: boolean;
+  /** CSP nonce for the inline <style> (style-src 'nonce-...'). */
+  nonce?: string;
 }
 export interface FooterTemplate {
   version: string;

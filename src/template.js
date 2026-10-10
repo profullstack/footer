@@ -41,7 +41,7 @@ export default {
   link: '<a href="{{href}}"{{#rel}} rel="{{rel}}"{{/rel}}>{{label}}</a>',
   footer: [
     '<footer class="pfs-footer" data-pfs-footer="{{version}}">',
-    '{{#css}}<style>{{{css}}}</style>{{/css}}',
+    '{{#css}}<style{{#nonce}} nonce="{{nonce}}"{{/nonce}}>{{{css}}}</style>{{/css}}',
     '<div class="pfs-footer__inner">',
     '{{#links}}<nav class="pfs-footer__links" aria-label="Footer">{{{links}}}</nav>{{/links}}',
     '<nav class="webring pfs-footer__ring" aria-label="{{ring_name}} webring">',
