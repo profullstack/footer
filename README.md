@@ -1,7 +1,7 @@
 # @profullstack/footer
 
 One footer for every Profullstack site: your links, the copyright line, and the
-`<<  Profullstack  >>  ⚄` webring nav (previous, ring, next, random).
+`<<  Profullstack  >>` webring nav (previous, ring, next).
 
 **Publish once, every site updates.** The markup and CSS ship as data
 (`template.json`). At render time each site fetches

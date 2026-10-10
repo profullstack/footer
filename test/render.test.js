@@ -31,15 +31,14 @@ test('ringLinks encodes the site as from= on all three hops', () => {
   assert.equal(ringLinks('x.test', { slug: 'other', host: 'https://ring.test/' }).next, 'https://ring.test/ring/other/next?from=https%3A%2F%2Fx.test%2F');
 });
 
-test('the rendered footer carries << Profullstack >> and the die', () => {
+test('the rendered footer carries << Profullstack >> and no random or vote link', () => {
   const html = renderFooter(template, { site: 'https://diskpush.com/', year: 2026 });
   assert.match(html, /rel="prev"[^>]*>&lt;&lt;<\/a>/);
   assert.match(html, />Profullstack<\/a>/);
   assert.match(html, /rel="next"[^>]*>&gt;&gt;<\/a>/);
-  assert.match(html, /title="Random site" aria-label="Random site"><span class="pfs-footer__icon pfs-footer__icon--random" aria-hidden="true"><\/span><\/a>/);
-  assert.match(html, /<a href="https:\/\/rssamplifier\.com\/ring\/profullstack\/vote" referrerpolicy="origin" title="Vote for this site"/);
+  assert.ok(!/random\?from=|Random site|\/vote"|Vote for this site|pfs-footer__icon/.test(html));
   assert.ok(!/<svg/i.test(html), 'icons are CSS masks, never inline svg');
-  assert.ok(html.includes('random?from=https%3A%2F%2Fdiskpush.com%2F'));
+  assert.ok(html.includes('next?from=https%3A%2F%2Fdiskpush.com%2F'));
   assert.match(html, /&copy; 2026 <a href="https:\/\/profullstack.com\/">Profullstack, Inc.<\/a>/);
   assert.match(html, /<style>\.pfs-footer/);
   assert.doesNotMatch(html, /\{\{/);

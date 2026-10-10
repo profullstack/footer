@@ -83,7 +83,7 @@ switch (cmd) {
     const html = (await res.text()).replace(/&amp;/g, '&');
     const want = ringLinks(home);
     let ok = res.ok;
-    for (const k of /** @type {const} */ (['previous', 'next', 'random'])) {
+    for (const k of /** @type {const} */ (['previous', 'next'])) {
       const has = html.includes(want[k]);
       ok &&= has;
       process.stdout.write(`${has ? 'ok  ' : 'MISS'} ${k} ${want[k]}\n`);
