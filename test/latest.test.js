@@ -46,3 +46,19 @@ test('descriptorResponse is json', async () => {
   assert.match(res.headers.get('content-type'), /application\/json/);
   assert.equal((await res.json()).rings[0].slug, 'a-test');
 });
+
+test('under Next.js every call goes through fetch so each route revalidates', async () => {
+  let calls = 0;
+  const real = globalThis.fetch;
+  globalThis.fetch = async () => (calls++, new Response(JSON.stringify(remote)));
+  process.env.NEXT_RUNTIME = 'nodejs';
+  try {
+    await latestTemplate();
+    await latestTemplate();
+    assert.equal(calls, 2);
+    assert.equal((await latestTemplate()).version, '9.9.9');
+  } finally {
+    delete process.env.NEXT_RUNTIME;
+    globalThis.fetch = real;
+  }
+});

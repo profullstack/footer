@@ -54,6 +54,11 @@ export async function latestTemplate(opts = {}) {
   const env = typeof process !== 'undefined' ? process.env ?? {} : {};
   if (env.PROFULLSTACK_FOOTER_OFFLINE === '1') return bundled;
   const now = (opts.now ?? Date.now)();
+  // Under Next.js, always go through fetch: Next caches it (revalidate 300 s)
+  // AND marks the route as revalidating. Answering from memory instead left
+  // every page rendered after the first at build time fully static
+  // (s-maxage=31536000), so it never saw a template release.
+  if (!opts.fetch && underNext()) return fetchFresh(opts, env, now);
   if (cache.template && now < cache.until) return cache.template;
   // Stale while revalidating: hand back what we have, refresh once.
   if (cache.template && cache.pending) return cache.template;
@@ -85,6 +90,38 @@ export async function latestTemplate(opts = {}) {
   })();
 
   return cache.template ?? cache.pending;
+}
+
+/** Next.js patches fetch (and marks it) and sets NEXT_RUNTIME in its servers. */
+function underNext() {
+  // @ts-ignore Next's marker on its patched fetch
+  if (globalThis.fetch && globalThis.fetch.__nextPatched) return true;
+  // Written out literally so Next's compile-time define can replace it.
+  return typeof process !== 'undefined' && !!process.env.NEXT_RUNTIME;
+}
+
+/** One uncached-by-us fetch, for runtimes (Next) that cache fetch themselves. */
+async function fetchFresh(opts, env, now) {
+  try {
+    const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 1500) : null;
+    const res = await globalThis
+      .fetch(opts.url ?? env.PROFULLSTACK_FOOTER_TEMPLATE_URL ?? TEMPLATE_URL, {
+        signal: ctrl?.signal,
+        headers: { accept: 'application/json' },
+        // @ts-ignore Next's fetch extension
+        next: { revalidate: NEXT_REVALIDATE_S },
+      })
+      .finally(() => timer && clearTimeout(timer));
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const t = await res.json();
+    if (!usable(t)) throw new Error('template not usable by this renderer');
+    cache.template = t;
+    cache.until = now + (opts.ttlMs ?? DEFAULT_TTL_MS);
+    return t;
+  } catch {
+    return cache.template ?? bundled;
+  }
 }
 
 /** Forget the cached template (tests, or a manual refresh hook). */
