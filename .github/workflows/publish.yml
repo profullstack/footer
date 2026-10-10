@@ -103,11 +103,22 @@ jobs:
           echo "::warning::published, but the registry does not report @profullstack/footer@$VERSION yet (first publishes can lag several minutes)"
 
       # Sites fetch template.json from jsDelivr's @latest, which jsDelivr caches
-      # for hours; purge it so the release reaches them on their next refresh.
-      - name: Purge jsDelivr @latest
+      # for hours, and jsDelivr learns of a new npm version a little after npm
+      # does: a single purge right after publish can re-cache the OLD version
+      # (0.2.2 sat behind 0.2.1 that way). Purge until @latest reports this one.
+      - name: Purge jsDelivr @latest until it serves this version
         if: steps.published.outputs.already == 'false'
         continue-on-error: true
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          for f in template.json src/embed.js src/index.js src/render.js src/template.js; do
-            curl -fsS "https://purge.jsdelivr.net/npm/@profullstack/footer@latest/$f" -o /dev/null && echo "purged $f"
+          for _ in $(seq 1 30); do
+            for f in template.json src/embed.js src/index.js src/render.js src/template.js; do
+              curl -fsS "https://purge.jsdelivr.net/npm/@profullstack/footer@latest/$f" -o /dev/null || true
+            done
+            sleep 20
+            got="$(curl -fsSI https://cdn.jsdelivr.net/npm/@profullstack/footer@latest/template.json | tr -d '\r' | awk -F': ' 'tolower($1)=="x-jsd-version"{print $2}')"
+            if [ "$got" = "$VERSION" ]; then echo "jsDelivr @latest serves $VERSION"; exit 0; fi
+            echo "jsDelivr @latest still on ${got:-?}, purging again"
           done
+          echo "::warning::jsDelivr @latest did not reach $VERSION in 10 minutes; purge by hand"
