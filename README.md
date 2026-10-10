@@ -6,8 +6,8 @@ One footer for every Profullstack site: your links, the copyright line, and the
 **Publish once, every site updates.** The markup and CSS ship as data
 (`template.json`). At render time each site fetches
 `https://cdn.jsdelivr.net/npm/@profullstack/footer@latest/template.json`
-(1 h cache, 1.5 s timeout, the bundled copy as the fallback), so a release reaches
-every site within the hour with no bump, rebuild or redeploy. Install it as
+(15 min cache, 1.5 s timeout, the bundled copy as the fallback), so a release reaches
+every site within about an hour (sooner on sites without a page cache) with no bump, rebuild or redeploy. Install it as
 `"@profullstack/footer": "latest"` too, so the render code follows on the next install.
 
 It renders on the server: the ring's verifier reads your HTML and never runs
