@@ -23,7 +23,10 @@ export { bundled as bundledTemplate };
 
 export const TEMPLATE_URL = 'https://cdn.jsdelivr.net/npm/@profullstack/footer@latest/template.json';
 
-const DEFAULT_TTL_MS = 60 * 60 * 1000;
+// 15 min: a page cache (ISR, 1 h) and Next's fetch cache both sit in front of
+// this one and each serves one stale copy before refreshing, so the layers add up.
+const DEFAULT_TTL_MS = 15 * 60 * 1000;
+const NEXT_REVALIDATE_S = 300;
 const FAILURE_TTL_MS = 5 * 60 * 1000;
 
 /** @type {{ template: any, until: number, pending: Promise<any> | null }} */
@@ -65,7 +68,7 @@ export async function latestTemplate(opts = {}) {
       const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
       const timer = ctrl ? setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 1500) : null;
       /** @type {RequestInit & { next?: { revalidate: number } }} */
-      const init = { signal: ctrl?.signal, headers: { accept: 'application/json' }, next: { revalidate: Math.round(ttl / 1000) } };
+      const init = { signal: ctrl?.signal, headers: { accept: 'application/json' }, next: { revalidate: NEXT_REVALIDATE_S } };
       const res = await doFetch(url, init).finally(() => timer && clearTimeout(timer));
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const t = await res.json();
