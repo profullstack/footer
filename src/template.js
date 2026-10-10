@@ -21,7 +21,7 @@ const RANDOM = glyph(
 const VOTE = glyph("<path d='M12 4 21 19H3z'/>");
 
 export default {
-  version: '0.2.0',
+  version: '0.2.1',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
