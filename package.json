@@ -1,0 +1,31 @@
+{
+  "name": "@profullstack/footer",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "One footer for every Profullstack site: links, copyright and the << Profullstack >> webring nav with Random. Sites render the @latest template from the CDN at runtime, so a release updates every site without a redeploy.",
+  "keywords": ["footer", "webring", "openwebring", "copyright", "react", "nextjs", "hono", "ssr"],
+  "repository": { "type": "git", "url": "git+https://github.com/profullstack/footer.git" },
+  "homepage": "https://github.com/profullstack/footer#readme",
+  "bugs": { "url": "https://github.com/profullstack/footer/issues" },
+  "license": "MIT",
+  "author": "Profullstack, Inc.",
+  "exports": {
+    ".": { "types": "./index.d.ts", "import": "./src/index.js" },
+    "./react": { "types": "./react.d.ts", "import": "./src/react.js" },
+    "./render": { "types": "./index.d.ts", "import": "./src/render.js" },
+    "./embed": "./src/embed.js",
+    "./template.json": "./template.json",
+    "./package.json": "./package.json"
+  },
+  "bin": { "profullstack-footer": "bin/profullstack-footer.js" },
+  "files": ["src", "bin", "index.d.ts", "react.d.ts", "template.json", "README.md", "LICENSE"],
+  "sideEffects": ["./src/embed.js"],
+  "peerDependencies": { "react": ">=18" },
+  "peerDependenciesMeta": { "react": { "optional": true } },
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "node scripts/build-json.js",
+    "test": "node --test",
+    "prepack": "node scripts/build-json.js"
+  }
+}
