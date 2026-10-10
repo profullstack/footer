@@ -36,7 +36,9 @@ test('the rendered footer carries << Profullstack >> and the die', () => {
   assert.match(html, /rel="prev"[^>]*>&lt;&lt;<\/a>/);
   assert.match(html, />Profullstack<\/a>/);
   assert.match(html, /rel="next"[^>]*>&gt;&gt;<\/a>/);
-  assert.match(html, /title="Random site" aria-label="Random site">&#x2684;<\/a>/);
+  assert.match(html, /title="Random site" aria-label="Random site"><span class="pfs-footer__icon pfs-footer__icon--random" aria-hidden="true"><\/span><\/a>/);
+  assert.match(html, /<a href="https:\/\/rssamplifier\.com\/ring\/profullstack\/vote" referrerpolicy="origin" title="Vote for this site"/);
+  assert.ok(!/<svg/i.test(html), 'icons are CSS masks, never inline svg');
   assert.ok(html.includes('random?from=https%3A%2F%2Fdiskpush.com%2F'));
   assert.match(html, /&copy; 2026 <a href="https:\/\/profullstack.com\/">Profullstack, Inc.<\/a>/);
   assert.match(html, /<style>\.pfs-footer/);
