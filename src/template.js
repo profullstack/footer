@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.2.4',
+  version: '0.2.5',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -19,6 +19,8 @@ export default {
     '.pfs-footer a:hover,.pfs-footer a:focus-visible{color:inherit;text-decoration:underline}',
     '.pfs-footer__links{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--pfs-footer-gap)}',
     '.pfs-footer__ring{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.6rem}',
+    '.pfs-footer a.pfs-footer__badge{display:inline-block;line-height:0}',
+    '.pfs-footer__badge img{display:block;width:200px;height:44px;max-width:100%}',
     '.pfs-footer__copy{margin:0;color:var(--pfs-footer-muted)}',
     '.pfs-footer__copy a{color:inherit}',
   ].join(''),
@@ -33,6 +35,7 @@ export default {
     '<a href="{{ring}}">{{ring_name}}</a>',
     '<a href="{{next}}" rel="next" title="Next site">&gt;&gt;</a>',
     '</nav>',
+    '<a class="pfs-footer__badge" href="https://built.indie.pit.world/for?site={{site}}"><img src="https://built.indie.pit.world/for.svg?site={{site}}" alt="Listed on built.indie" width="200" height="44" loading="lazy"></a>',
     '<p class="pfs-footer__copy">&copy; {{years}} <a href="{{owner_url}}">{{owner_name}}</a>{{#tagline}} &middot; {{tagline}}{{/tagline}}</p>',
     '</div>',
     '</footer>',
