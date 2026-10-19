@@ -68,7 +68,13 @@ test('no links means no links nav', () => {
 
 test('escaping: options can never inject markup', () => {
   const html = renderFooter(template, { site: 'a.test', links: [{ label: '<img src=x onerror=alert(1)>', href: '"><script>x</script>' }] });
-  assert.ok(!/<img|<script/i.test(html));
+  assert.ok(!/<img src=x|<script/i.test(html));
+});
+
+test('the built.indie badge links the listing for this site, server-rendered', () => {
+  const html = renderFooter(template, { site: 'https://www.a.test/blog' });
+  assert.ok(html.includes('<a class="pfs-footer__badge" href="https://built.indie.pit.world/for?site=https://www.a.test/">'));
+  assert.ok(html.includes('src="https://built.indie.pit.world/for.svg?site=https://www.a.test/"'));
 });
 
 test('sanitizeTemplate strips script, handlers and javascript: urls', () => {
