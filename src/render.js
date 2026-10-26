@@ -10,6 +10,11 @@ export const DEFAULT_RING = {
 
 export const DEFAULT_OWNER = { name: 'Profullstack, Inc.', url: 'https://profullstack.com/' };
 
+// The one newsletter endpoint for every Profullstack property (double opt-in, keeps the site's host).
+// Fixed here, never taken from the template: a CDN template cannot carry a <form> (sanitizeTemplate
+// strips them), so it can only say WHERE the form goes ({{{subscribe}}}), not where it posts.
+export const SUBSCRIBE_URL = 'https://pit.world/subscribe';
+
 const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 
 /** @param {unknown} value */
@@ -46,6 +51,24 @@ export function ringLinks(site, ring = {}) {
     next: `${base}/next?from=${from}`,
     random: `${base}/random?from=${from}`,
   };
+}
+
+/**
+ * The low-profile newsletter form: plain HTML, works with no script, posts the site's hostname so the
+ * signup records which property it came from. The endpoint answers with a "check your inbox" page and
+ * a link back here.
+ * @param {string} site
+ */
+export function subscribeForm(site) {
+  const host = new URL(canonicalSite(site)).hostname;
+  return (
+    `<form class="pfs-footer__sub" action="${SUBSCRIBE_URL}" method="post">` +
+    `<input type="hidden" name="site" value="${escapeHtml(host)}">` +
+    '<input class="pfs-footer__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+    '<input type="email" name="email" required maxlength="254" autocomplete="email" placeholder="Email for our newsletter" aria-label="Email address for the Profullstack newsletter">' +
+    '<button type="submit">Subscribe</button>' +
+    '</form>'
+  );
 }
 
 /** @param {number} since @param {number} year */
@@ -110,6 +133,7 @@ export function fill(tpl, vars) {
  *   css?: boolean,
  *   houseLinks?: boolean,
  *   nonce?: string,
+ *   subscribe?: boolean,
  * }} FooterOptions
  * @typedef {{ version: string, renderer: number, css: string, link: string, footer: string, houseLinks?: FooterLink[] }} FooterTemplate
  */
@@ -143,6 +167,7 @@ export function renderFooter(template, opts) {
     site: canonicalSite(opts.site),
     name: opts.name ?? '',
     nonce: opts.nonce ?? '',
+    subscribe: opts.subscribe === false ? '' : subscribeForm(opts.site),
   });
 }
 

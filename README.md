@@ -72,10 +72,23 @@ npx @profullstack/footer html --site https://example.com/ --link Docs=/docs
 | `ring` | `{ slug: 'profullstack', name: 'Profullstack', host: 'https://rssamplifier.com' }` | |
 | `css` | `true` | `false` drops the `<style>`; style `.pfs-footer*` yourself |
 | `houseLinks` | `true` | `false` hides links the template adds for every site |
+| `subscribe` | `true` | `false` hides the newsletter form |
 | `nonce` | | CSP nonce for the inline `<style>`; or `css: false` and style `.pfs-footer*` yourself |
 
 Theme it with `--pfs-footer-muted`, `--pfs-footer-gap` and `--pfs-footer-size` on
 `.pfs-footer`; colors otherwise inherit from the page.
+
+## Newsletter form
+
+Every footer carries a small email field and a Subscribe button: a plain HTML form (no script)
+that posts to `https://pit.world/subscribe` with the site's hostname. pit.world runs the double
+opt-in (confirmation email, nothing kept until the click), answers with a "check your inbox" page
+that links back to the site, and records which property each subscriber came from
+(`https://pit.world/admin/subscribers`). The endpoint is fixed in render.js, never in the template.
+
+**CSP:** a site that sets `form-action` must allow it: `form-action 'self' https://pit.world`.
+Turn it off with `subscribe: false` (`--no-subscribe`). Installs before 0.3.0 cannot render the
+form; their footer shows a plain "Newsletter" link to the same page instead, from the @latest template.
 
 ## CLI
 

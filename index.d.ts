@@ -20,6 +20,8 @@ export interface FooterOptions {
   houseLinks?: boolean;
   /** CSP nonce for the inline <style> (style-src 'nonce-...'). */
   nonce?: string;
+  /** false hides the newsletter form (it posts to SUBSCRIBE_URL; CSP form-action must allow https://pit.world). */
+  subscribe?: boolean;
 }
 export interface FooterTemplate {
   version: string;
@@ -46,6 +48,8 @@ export interface DescriptorOptions {
 
 export declare const RENDERER: number;
 export declare const TEMPLATE_URL: string;
+export declare const SUBSCRIBE_URL: string;
+export declare function subscribeForm(site: string): string;
 export declare const DEFAULT_RING: Required<RingOptions>;
 export declare const DEFAULT_OWNER: { name: string; url: string };
 export declare const bundledTemplate: FooterTemplate;
