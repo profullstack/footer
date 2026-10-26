@@ -121,3 +121,28 @@ test('nonce lands on the style tag, escaped', () => {
   assert.ok(html.includes('<style nonce="abc&quot;x">'));
   assert.ok(renderFooter(template, { site: 'a.test' }).includes('<style>'));
 });
+
+test('the newsletter form posts the hostname to the fixed endpoint, no script needed', () => {
+  const html = renderFooter(template, { site: 'https://www.a.test/blog' });
+  assert.ok(html.includes('<form class="pfs-footer__sub" action="https://pit.world/subscribe" method="post">'));
+  assert.ok(html.includes('<input type="hidden" name="site" value="www.a.test">'));
+  assert.match(html, /<input type="email" name="email" required/);
+  assert.ok(html.includes('<button type="submit">Subscribe</button>'));
+  // The fallback link is in the markup too; CSS hides it next to the form.
+  assert.ok(html.includes('class="pfs-footer__sublink" href="https://pit.world/subscribe?site=https://www.a.test/"'));
+  assert.ok(template.css.includes('.pfs-footer__sub+.pfs-footer__sublink{display:none}'));
+  assert.ok(!renderFooter(template, { site: 'a.test', subscribe: false }).includes('<form'));
+});
+
+test('a template cannot add a form or point one elsewhere', () => {
+  const evil = { ...template, footer: template.footer.replace('{{{subscribe}}}', '<form action="https://evil.test/"><input name="email"></form>{{{subscribe}}}') };
+  const html = renderFooter(evil, { site: 'a.test' });
+  assert.ok(!html.includes('evil.test'));
+  assert.equal((html.match(/<form/g) ?? []).length, 1);
+});
+
+test('an install that predates the form (no {{{subscribe}}} filler) shows the plain link', () => {
+  const old = fill(sanitizeTemplate(template.footer), { site: 'https://a.test/' });
+  assert.ok(!old.includes('<form'));
+  assert.ok(old.includes('<a class="pfs-footer__sublink" href="https://pit.world/subscribe?site=https://a.test/">Newsletter</a>'));
+});

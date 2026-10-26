@@ -18,6 +18,8 @@ export {
   renderFooter,
   ringLinks,
   sanitizeTemplate,
+  SUBSCRIBE_URL,
+  subscribeForm,
 } from './render.js';
 export { bundled as bundledTemplate };
 

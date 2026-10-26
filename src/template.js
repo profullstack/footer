@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.2.6',
+  version: '0.3.0',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -22,6 +22,15 @@ export default {
     '.pfs-footer__badges{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.6rem}',
     '.pfs-footer a.pfs-footer__badge{display:inline-block;line-height:0}',
     '.pfs-footer__badge img{display:block;width:200px;height:44px;max-width:100%}',
+    '.pfs-footer__news{display:flex;justify-content:center}',
+    '.pfs-footer__sub{display:flex;align-items:center;gap:.35rem;margin:0;flex-wrap:wrap;justify-content:center}',
+    '.pfs-footer__sub input[type=email]{font:inherit;font-size:.8125rem;color:inherit;background:transparent;width:13.5rem;max-width:62vw;padding:.2rem .5rem;border:1px solid color-mix(in srgb,currentColor 25%,transparent);border-radius:.35rem}',
+    '.pfs-footer__sub input[type=email]::placeholder{color:var(--pfs-footer-muted);opacity:1}',
+    '.pfs-footer__sub input[type=email]:focus-visible{outline:2px solid color-mix(in srgb,currentColor 45%,transparent);outline-offset:1px}',
+    '.pfs-footer__sub button{font:inherit;font-size:.8125rem;color:var(--pfs-footer-muted);background:transparent;padding:.2rem .6rem;border:1px solid color-mix(in srgb,currentColor 25%,transparent);border-radius:.35rem;cursor:pointer}',
+    '.pfs-footer__sub button:hover,.pfs-footer__sub button:focus-visible{color:inherit}',
+    '.pfs-footer__hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}',
+    '.pfs-footer__sub+.pfs-footer__sublink{display:none}',
     '.pfs-footer__copy{margin:0;color:var(--pfs-footer-muted)}',
     '.pfs-footer__copy a{color:inherit}',
   ].join(''),
@@ -36,6 +45,9 @@ export default {
     '<a href="{{ring}}">{{ring_name}}</a>',
     '<a href="{{next}}" rel="next" title="Next site">&gt;&gt;</a>',
     '</nav>',
+    // The newsletter form comes from render.js ({{{subscribe}}}). Installs older than 0.3.0 cannot render
+    // it and show the plain link instead; when the form is there, CSS hides the link.
+    '<div class="pfs-footer__news">{{{subscribe}}}<a class="pfs-footer__sublink" href="https://pit.world/subscribe?site={{site}}">Newsletter</a></div>',
     '<div class="pfs-footer__badges">',
     '<a class="pfs-footer__badge" href="https://built.indie.pit.world/for?site={{site}}"><img src="https://built.indie.pit.world/for.svg?site={{site}}" alt="Listed on built.indie" width="200" height="44" loading="lazy"></a>',
     '<a class="pfs-footer__badge pfs-footer__badge--pwamart" href="https://pwamart.com/for?site={{site}}"><img src="https://pwamart.com/for.svg?site={{site}}" alt="Get it on pwamart" width="200" height="44" loading="lazy"></a>',

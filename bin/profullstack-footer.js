@@ -20,6 +20,7 @@ const HELP = `usage: profullstack-footer <html|json|descriptor|template|check> [
   --slug <slug>       ring member slug (descriptor; default host with dashes)
   --offline           use the bundled template, do not fetch @latest
   --no-css            leave the <style> out
+  --no-subscribe      leave the newsletter form out
 `;
 
 const { values, positionals } = parseArgs({
@@ -33,6 +34,7 @@ const { values, positionals } = parseArgs({
     slug: { type: 'string' },
     offline: { type: 'boolean' },
     'no-css': { type: 'boolean' },
+    'no-subscribe': { type: 'boolean' },
     help: { type: 'boolean', short: 'h' },
   },
 });
@@ -62,6 +64,7 @@ const opts = () => ({
   since: values.since ? Number(values.since) : undefined,
   tagline: values.tagline,
   css: !values['no-css'],
+  subscribe: !values['no-subscribe'],
 });
 
 switch (cmd) {
