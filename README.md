@@ -81,13 +81,20 @@ Theme it with `--pfs-footer-muted`, `--pfs-footer-gap` and `--pfs-footer-size` o
 
 ## Newsletter form
 
-Every footer carries a small email field and a Subscribe button: a plain HTML form (no script)
-that posts to `https://pit.world/subscribe` with the site's hostname. pit.world runs the double
-opt-in (confirmation email, nothing kept until the click), answers with a "check your inbox" page
-that links back to the site, and records which property each subscriber came from
-(`https://pit.world/admin/subscribers`). The endpoint is fixed in render.js, never in the template.
+Every footer carries a small email field and a Subscribe button that posts the site's hostname to
+pit.world. pit.world runs the double opt-in (confirmation email, nothing kept until the click) and
+records which property each subscriber came from (`https://pit.world/admin/subscribers`). The
+endpoint is fixed in render.js, never in the template.
 
-**CSP:** a site that sets `form-action` must allow it: `form-action 'self' https://pit.world`.
+Since 0.4.0 a small inline script inside the form (`wireSubscribe`) sends it as JSON to
+`https://pit.world/api/subscribe` and reports in place: "Email confirmation sent to you@x. Check your
+inbox." or "Failed: <why>" (bad address, domain takes no mail, rate limit, mail provider down, or
+the request was blocked). With no script it is a plain POST to `https://pit.world/subscribe`, which
+answers with a "check your inbox" page that links back to the site. `embed.js` wires the form itself.
+
+**CSP:** pass the page's `nonce` so the script runs, and allow pit.world:
+`connect-src 'self' https://pit.world; form-action 'self' https://pit.world`. If the request is
+blocked anyway, the form says "Failed: could not reach pit.world" instead of doing nothing.
 Turn it off with `subscribe: false` (`--no-subscribe`). Installs before 0.3.0 cannot render the
 form; their footer shows a plain "Newsletter" link to the same page instead, from the @latest template.
 

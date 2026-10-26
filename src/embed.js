@@ -10,6 +10,7 @@
 // and never runs this script. `profullstack-footer html --site ...` prints them.
 
 import { footerHtml } from './index.js';
+import { wireSubscribe } from './subscribe.js';
 
 /** @param {string | undefined} raw */
 function parse(raw) {
@@ -36,6 +37,8 @@ export async function mount(root = document) {
     });
     const tpl = document.createElement('template');
     tpl.innerHTML = html;
+    // Scripts parsed by innerHTML never run, so wire the newsletter form here.
+    tpl.content.querySelectorAll('.pfs-footer__sub').forEach((form) => wireSubscribe(/** @type {HTMLFormElement} */ (form)));
     el.replaceWith(tpl.content);
   }
 }

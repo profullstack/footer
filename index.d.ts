@@ -59,7 +59,9 @@ export interface DescriptorOptions {
 export declare const RENDERER: number;
 export declare const TEMPLATE_URL: string;
 export declare const SUBSCRIBE_URL: string;
-export declare function subscribeForm(site: string): string;
+export declare function subscribeForm(site: string, nonce?: string): string;
+/** The form's browser half: posts JSON to pit.world/api/subscribe and reports inline. Inlined by subscribeForm. */
+export declare function wireSubscribe(form: HTMLFormElement | null): void;
 export declare function siteBadges(badges?: FooterBadge[]): string;
 export declare const DEFAULT_RING: Required<RingOptions>;
 export declare const DEFAULT_OWNER: { name: string; url: string };

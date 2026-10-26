@@ -38,7 +38,8 @@ test('falls back to the bundled template on error, timeout or a newer renderer',
 test('a remote template cannot inject script', async () => {
   await latestTemplate({ fetch: ok({ ...remote, footer: remote.footer.replace('</footer>', '<script>alert(1)</script></footer>') }) });
   const html = await footerHtml({ site: 'a.test' });
-  assert.ok(!html.includes('<script'));
+  // The newsletter form's own script (render.js, never the template) is the one allowed.
+  assert.ok(!html.replace(/<script>\(function wireSubscribe[\s\S]*?<\/script>/, '').includes('<script'));
 });
 
 test('descriptorResponse is json', async () => {
