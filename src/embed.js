@@ -32,6 +32,7 @@ export async function mount(root = document) {
       since: d.since ? Number(d.since) : undefined,
       links: parse(d.links),
       owner: parse(d.owner),
+      badges: parse(d.badges),
     });
     const tpl = document.createElement('template');
     tpl.innerHTML = html;

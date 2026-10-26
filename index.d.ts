@@ -1,4 +1,12 @@
 export interface FooterLink { label: string; href: string; rel?: string }
+export interface FooterBadge {
+  href: string;
+  /** Image URL (http(s) or root-relative). */
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
 export interface RingOptions { slug?: string; name?: string; host?: string }
 export interface FooterOptions {
   /** The site's homepage; hops are measured from it. */
@@ -22,6 +30,8 @@ export interface FooterOptions {
   nonce?: string;
   /** false hides the newsletter form (it posts to SUBSCRIBE_URL; CSP form-action must allow https://pit.world). */
   subscribe?: boolean;
+  /** Badges only this site shows, after the house badges (e.g. a game's Foundplay badge). */
+  badges?: FooterBadge[];
 }
 export interface FooterTemplate {
   version: string;
@@ -50,6 +60,7 @@ export declare const RENDERER: number;
 export declare const TEMPLATE_URL: string;
 export declare const SUBSCRIBE_URL: string;
 export declare function subscribeForm(site: string): string;
+export declare function siteBadges(badges?: FooterBadge[]): string;
 export declare const DEFAULT_RING: Required<RingOptions>;
 export declare const DEFAULT_OWNER: { name: string; url: string };
 export declare const bundledTemplate: FooterTemplate;

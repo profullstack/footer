@@ -71,6 +71,29 @@ export function subscribeForm(site) {
   );
 }
 
+const SAFE_URL = /^\s*(https?:\/\/|\/(?!\/))/i;
+
+/**
+ * Badges only this site shows, after the house badges: an image link each. Only http(s) or
+ * root-relative URLs; anything else is dropped.
+ * @param {FooterBadge[] | undefined} badges
+ */
+export function siteBadges(badges) {
+  return (badges ?? [])
+    .filter((b) => b && b.href && b.src && SAFE_URL.test(b.href) && SAFE_URL.test(b.src))
+    .map((b) => {
+      const size = ['width', 'height']
+        .filter((k) => Number.isFinite(Number(b[k])) && Number(b[k]) > 0)
+        .map((k) => ` ${k}="${Math.round(Number(b[k]))}"`)
+        .join('');
+      return (
+        `<a class="pfs-footer__badge pfs-footer__badge--site" href="${escapeHtml(b.href)}">` +
+        `<img src="${escapeHtml(b.src)}" alt="${escapeHtml(b.alt ?? '')}"${size} loading="lazy"></a>`
+      );
+    })
+    .join('');
+}
+
 /** @param {number} since @param {number} year */
 export function years(since, year) {
   return since && since < year ? `${since}–${year}` : String(year);
@@ -121,6 +144,7 @@ export function fill(tpl, vars) {
 
 /**
  * @typedef {{ label: string, href: string, rel?: string }} FooterLink
+ * @typedef {{ href: string, src: string, alt: string, width?: number, height?: number }} FooterBadge
  * @typedef {{
  *   site: string,
  *   name?: string,
@@ -134,6 +158,7 @@ export function fill(tpl, vars) {
  *   houseLinks?: boolean,
  *   nonce?: string,
  *   subscribe?: boolean,
+ *   badges?: FooterBadge[],
  * }} FooterOptions
  * @typedef {{ version: string, renderer: number, css: string, link: string, footer: string, houseLinks?: FooterLink[] }} FooterTemplate
  */
@@ -168,6 +193,7 @@ export function renderFooter(template, opts) {
     name: opts.name ?? '',
     nonce: opts.nonce ?? '',
     subscribe: opts.subscribe === false ? '' : subscribeForm(opts.site),
+    badges: siteBadges(opts.badges),
   });
 }
 

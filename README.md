@@ -73,6 +73,7 @@ npx @profullstack/footer html --site https://example.com/ --link Docs=/docs
 | `css` | `true` | `false` drops the `<style>`; style `.pfs-footer*` yourself |
 | `houseLinks` | `true` | `false` hides links the template adds for every site |
 | `subscribe` | `true` | `false` hides the newsletter form |
+| `badges` | `[]` | `{ href, src, alt, width?, height? }[]`: badges only this site shows, after the house badges |
 | `nonce` | | CSP nonce for the inline `<style>`; or `css: false` and style `.pfs-footer*` yourself |
 
 Theme it with `--pfs-footer-muted`, `--pfs-footer-gap` and `--pfs-footer-size` on

@@ -146,3 +146,33 @@ test('an install that predates the form (no {{{subscribe}}} filler) shows the pl
   assert.ok(!old.includes('<form'));
   assert.ok(old.includes('<a class="pfs-footer__sublink" href="https://pit.world/subscribe?site=https://a.test/">Newsletter</a>'));
 });
+
+test('site badges render after the house badges, only on the site that passes them', () => {
+  const badge = {
+    href: 'https://foundplay.io/games/g?utm_source=badge',
+    src: 'https://foundplay.io/badge/g.svg',
+    alt: 'Play G on Foundplay',
+    width: 242,
+    height: 28,
+  };
+  const html = renderFooter(template, { site: 'https://a.test/', year: 2026, badges: [badge] });
+  const at = html.indexOf('<a class="pfs-footer__badge pfs-footer__badge--site" href="https://foundplay.io/games/g?utm_source=badge">');
+  assert.ok(at > html.indexOf('pfs-footer__badge--pwamart'));
+  assert.ok(html.includes('<img src="https://foundplay.io/badge/g.svg" alt="Play G on Foundplay" width="242" height="28" loading="lazy">'));
+  assert.ok(!renderFooter(template, { site: 'https://a.test/', year: 2026 }).includes('pfs-footer__badge--site"'));
+});
+
+test('site badges drop unsafe URLs and escape attributes', () => {
+  const html = renderFooter(template, {
+    site: 'https://a.test/',
+    year: 2026,
+    badges: [
+      { href: 'javascript:alert(1)', src: 'https://x.test/b.svg', alt: 'x' },
+      { href: 'https://x.test/', src: 'data:image/svg+xml,<svg>', alt: 'x' },
+      { href: 'https://x.test/?a="b"', src: '/b.svg', alt: '"><script>', width: 'nope' },
+    ],
+  });
+  assert.equal(html.split('pfs-footer__badge--site"').length - 1, 1);
+  assert.ok(html.includes('href="https://x.test/?a=&quot;b&quot;"'));
+  assert.ok(html.includes('alt="&quot;&gt;&lt;script&gt;" loading="lazy"'));
+});
