@@ -18,6 +18,7 @@ export {
   renderFooter,
   ringLinks,
   sanitizeTemplate,
+  siteBadges,
   SUBSCRIBE_URL,
   subscribeForm,
 } from './render.js';

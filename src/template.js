@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.3.0',
+  version: '0.3.1',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -22,6 +22,7 @@ export default {
     '.pfs-footer__badges{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.6rem}',
     '.pfs-footer a.pfs-footer__badge{display:inline-block;line-height:0}',
     '.pfs-footer__badge img{display:block;width:200px;height:44px;max-width:100%}',
+    '.pfs-footer__badge--site img{width:auto;height:auto}',
     '.pfs-footer__news{display:flex;justify-content:center}',
     '.pfs-footer__sub{display:flex;align-items:center;gap:.35rem;margin:0;flex-wrap:wrap;justify-content:center}',
     '.pfs-footer__sub input[type=email]{font:inherit;font-size:.8125rem;color:inherit;background:transparent;width:13.5rem;max-width:62vw;padding:.2rem .5rem;border:1px solid color-mix(in srgb,currentColor 25%,transparent);border-radius:.35rem}',
@@ -51,6 +52,8 @@ export default {
     '<div class="pfs-footer__badges">',
     '<a class="pfs-footer__badge" href="https://built.indie.pit.world/for?site={{site}}"><img src="https://built.indie.pit.world/for.svg?site={{site}}" alt="Listed on built.indie" width="200" height="44" loading="lazy"></a>',
     '<a class="pfs-footer__badge pfs-footer__badge--pwamart" href="https://pwamart.com/for?site={{site}}"><img src="https://pwamart.com/for.svg?site={{site}}" alt="Get it on pwamart" width="200" height="44" loading="lazy"></a>',
+    // Per-site badges (the `badges` option, e.g. a game's Foundplay badge), built and escaped by render.js.
+    '{{{badges}}}',
     '</div>',
     '<p class="pfs-footer__copy">&copy; {{years}} <a href="{{owner_url}}">{{owner_name}}</a>{{#tagline}} &middot; {{tagline}}{{/tagline}}</p>',
     '</div>',
