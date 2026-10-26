@@ -75,6 +75,8 @@ test('the built.indie badge links the listing for this site, server-rendered', (
   const html = renderFooter(template, { site: 'https://www.a.test/blog' });
   assert.ok(html.includes('<a class="pfs-footer__badge" href="https://built.indie.pit.world/for?site=https://www.a.test/">'));
   assert.ok(html.includes('src="https://built.indie.pit.world/for.svg?site=https://www.a.test/"'));
+  assert.ok(html.includes('<a class="pfs-footer__badge pfs-footer__badge--pwamart" href="https://pwamart.com/for?site=https://www.a.test/">'));
+  assert.ok(html.includes('src="https://pwamart.com/for.svg?site=https://www.a.test/" alt="Get it on pwamart" width="200" height="44" loading="lazy"'));
 });
 
 test('sanitizeTemplate strips script, handlers and javascript: urls', () => {

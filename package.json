@@ -1,6 +1,6 @@
 {
   "name": "@profullstack/footer",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "type": "module",
   "description": "One footer for every Profullstack site: links, copyright and the << Profullstack >> webring nav with Random. Sites render the @latest template from the CDN at runtime, so a release updates every site without a redeploy.",
   "keywords": ["footer", "webring", "openwebring", "copyright", "react", "nextjs", "hono", "ssr"],
