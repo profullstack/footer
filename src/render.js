@@ -1,5 +1,7 @@
 // Pure rendering: no I/O, safe in any runtime (Node, Bun, edge, browser).
 
+import { wireSubscribe } from './subscribe.js';
+
 export const RENDERER = 1;
 
 export const DEFAULT_RING = {
@@ -54,12 +56,16 @@ export function ringLinks(site, ring = {}) {
 }
 
 /**
- * The low-profile newsletter form: plain HTML, works with no script, posts the site's hostname so the
- * signup records which property it came from. The endpoint answers with a "check your inbox" page and
- * a link back here.
+ * The low-profile newsletter form: posts the site's hostname so the signup records which property it
+ * came from. A small inline script (wireSubscribe, nonce'd when the site passes one) sends it as JSON
+ * and says "Email confirmation sent" or "Failed: <why>" in the status line, without leaving the page.
+ * With no script it is a plain POST and the endpoint answers with a "check your inbox" page.
+ * The status line and script sit INSIDE the form: the template's CSS hides the fallback link with
+ * `.pfs-footer__sub+.pfs-footer__sublink`, so nothing may come between them.
  * @param {string} site
+ * @param {string} [nonce]
  */
-export function subscribeForm(site) {
+export function subscribeForm(site, nonce) {
   const host = new URL(canonicalSite(site)).hostname;
   return (
     `<form class="pfs-footer__sub" action="${SUBSCRIBE_URL}" method="post">` +
@@ -67,6 +73,8 @@ export function subscribeForm(site) {
     '<input class="pfs-footer__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">' +
     '<input type="email" name="email" required maxlength="254" autocomplete="email" placeholder="Email for our newsletter" aria-label="Email address for the Profullstack newsletter">' +
     '<button type="submit">Subscribe</button>' +
+    '<span class="pfs-footer__msg" role="status" aria-live="polite"></span>' +
+    `<script${nonce ? ` nonce="${escapeHtml(nonce)}"` : ''}>(${wireSubscribe})(document.currentScript.parentNode)</script>` +
     '</form>'
   );
 }
@@ -192,7 +200,7 @@ export function renderFooter(template, opts) {
     site: canonicalSite(opts.site),
     name: opts.name ?? '',
     nonce: opts.nonce ?? '',
-    subscribe: opts.subscribe === false ? '' : subscribeForm(opts.site),
+    subscribe: opts.subscribe === false ? '' : subscribeForm(opts.site, opts.nonce),
     badges: siteBadges(opts.badges),
   });
 }

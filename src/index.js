@@ -22,6 +22,7 @@ export {
   SUBSCRIBE_URL,
   subscribeForm,
 } from './render.js';
+export { wireSubscribe } from './subscribe.js';
 export { bundled as bundledTemplate };
 
 export const TEMPLATE_URL = 'https://cdn.jsdelivr.net/npm/@profullstack/footer@latest/template.json';

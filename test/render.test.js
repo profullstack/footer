@@ -68,7 +68,8 @@ test('no links means no links nav', () => {
 
 test('escaping: options can never inject markup', () => {
   const html = renderFooter(template, { site: 'a.test', links: [{ label: '<img src=x onerror=alert(1)>', href: '"><script>x</script>' }] });
-  assert.ok(!/<img src=x|<script/i.test(html));
+  // The newsletter form's own script is the one allowed.
+  assert.ok(!/<img src=x|<script/i.test(html.replace(/<script>\(function wireSubscribe[\s\S]*?<\/script>/, '')));
 });
 
 test('the built.indie badge links the listing for this site, server-rendered', () => {
