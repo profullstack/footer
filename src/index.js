@@ -1,7 +1,7 @@
 // @profullstack/footer: one footer for every Profullstack site.
 //
 // The markup lives in template.js and ships as template.json. `footerHtml`
-// fetches the @latest template from the CDN at render time (cached, with the
+// fetches the @latest template (or a pinned `version`) from the CDN at render time (cached, with the
 // bundled copy as the fallback), so publishing a release is the whole
 // rollout: no site has to bump, rebuild or redeploy.
 
@@ -17,6 +17,9 @@ export {
   escapeHtml,
   renderFooter,
   ringLinks,
+  safeUrl,
+  sanitizeCss,
+  sanitizeHtml,
   sanitizeTemplate,
   siteBadges,
   SUBSCRIBE_URL,
@@ -27,14 +30,48 @@ export { bundled as bundledTemplate };
 
 export const TEMPLATE_URL = 'https://cdn.jsdelivr.net/npm/@profullstack/footer@latest/template.json';
 
+/**
+ * The CDN template URL for a version. `latest` (the default) follows every release; an exact version
+ * such as '0.5.0' is immutable on jsDelivr, so a compromised later publish cannot reach the site;
+ * 'bundled' never fetches and renders the copy shipped in this install.
+ * @param {string} [version]
+ */
+export function templateUrl(version = 'latest') {
+  const v = String(version).trim();
+  if (!/^[0-9A-Za-z][0-9A-Za-z.+-]{0,63}$/.test(v)) throw new TypeError(`@profullstack/footer: bad template version ${JSON.stringify(version)}`);
+  return `https://cdn.jsdelivr.net/npm/@profullstack/footer@${v}/template.json`;
+}
+
 // 15 min: a page cache (ISR, 1 h) and Next's fetch cache both sit in front of
 // this one and each serves one stale copy before refreshing, so the layers add up.
 const DEFAULT_TTL_MS = 15 * 60 * 1000;
 const NEXT_REVALIDATE_S = 300;
 const FAILURE_TTL_MS = 5 * 60 * 1000;
 
-/** @type {{ template: any, until: number, pending: Promise<any> | null }} */
-const cache = { template: null, until: 0, pending: null };
+/** One cache entry per template URL, so a pinned version and @latest never share one. */
+/** @type {Map<string, { template: any, until: number, pending: Promise<any> | null }>} */
+const caches = new Map();
+/** @param {string} url */
+function cacheFor(url) {
+  let c = caches.get(url);
+  if (!c) caches.set(url, (c = { template: null, until: 0, pending: null }));
+  return c;
+}
+
+/** The URL a call fetches: url, then version, then the env overrides, then @latest. */
+function resolveUrl(opts, env) {
+  if (opts.url) return opts.url;
+  if (opts.version) return templateUrl(opts.version);
+  if (env.PROFULLSTACK_FOOTER_TEMPLATE_URL) return env.PROFULLSTACK_FOOTER_TEMPLATE_URL;
+  if (env.PROFULLSTACK_FOOTER_VERSION) return templateUrl(env.PROFULLSTACK_FOOTER_VERSION);
+  return TEMPLATE_URL;
+}
+
+/** @param {any} opts @param {Record<string, string | undefined>} env */
+function wantsBundled(opts, env) {
+  const v = opts.version ?? (opts.url ? undefined : env.PROFULLSTACK_FOOTER_VERSION);
+  return env.PROFULLSTACK_FOOTER_OFFLINE === '1' || v === 'bundled';
+}
 
 /** @param {any} t */
 function usable(t) {
@@ -52,24 +89,33 @@ function usable(t) {
  * The newest template this install can render. Never throws and never waits
  * longer than `timeoutMs`: a slow or broken CDN gives the bundled template.
  *
- * @param {{ url?: string, ttlMs?: number, timeoutMs?: number, fetch?: typeof fetch, now?: () => number }} [opts]
+ * `version` pins the CDN template ('0.5.0'); 'bundled' never fetches. Also settable fleet-wide with
+ * the PROFULLSTACK_FOOTER_VERSION env var. Default: @latest.
+ *
+ * @param {{ url?: string, version?: string, ttlMs?: number, timeoutMs?: number, fetch?: typeof fetch, now?: () => number }} [opts]
  */
 export async function latestTemplate(opts = {}) {
   const env = typeof process !== 'undefined' ? process.env ?? {} : {};
-  if (env.PROFULLSTACK_FOOTER_OFFLINE === '1') return bundled;
+  if (wantsBundled(opts, env)) return bundled;
+  let url;
+  try {
+    url = resolveUrl(opts, env);
+  } catch {
+    return bundled;
+  }
+  const cache = cacheFor(url);
   const now = (opts.now ?? Date.now)();
   // Under Next.js, always go through fetch: Next caches it (revalidate 300 s)
   // AND marks the route as revalidating. Answering from memory instead left
   // every page rendered after the first at build time fully static
   // (s-maxage=31536000), so it never saw a template release.
-  if (!opts.fetch && underNext()) return fetchFresh(opts, env, now);
+  if (!opts.fetch && underNext()) return fetchFresh(opts, url, cache, now);
   if (cache.template && now < cache.until) return cache.template;
   // Stale while revalidating: hand back what we have, refresh once.
   if (cache.template && cache.pending) return cache.template;
 
   const doFetch = opts.fetch ?? globalThis.fetch;
   if (typeof doFetch !== 'function') return bundled;
-  const url = opts.url ?? env.PROFULLSTACK_FOOTER_TEMPLATE_URL ?? TEMPLATE_URL;
   const ttl = opts.ttlMs ?? DEFAULT_TTL_MS;
 
   cache.pending = (async () => {
@@ -105,12 +151,12 @@ function underNext() {
 }
 
 /** One uncached-by-us fetch, for runtimes (Next) that cache fetch themselves. */
-async function fetchFresh(opts, env, now) {
+async function fetchFresh(opts, url, cache, now) {
   try {
     const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
     const timer = ctrl ? setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 1500) : null;
     const res = await globalThis
-      .fetch(opts.url ?? env.PROFULLSTACK_FOOTER_TEMPLATE_URL ?? TEMPLATE_URL, {
+      .fetch(url, {
         signal: ctrl?.signal,
         headers: { accept: 'application/json' },
         // @ts-ignore Next's fetch extension
@@ -130,17 +176,15 @@ async function fetchFresh(opts, env, now) {
 
 /** Forget the cached template (tests, or a manual refresh hook). */
 export function resetTemplateCache() {
-  cache.template = null;
-  cache.until = 0;
-  cache.pending = null;
+  caches.clear();
 }
 
 /**
- * The footer HTML using the @latest template. Use this on the server.
- * @param {import('./render.js').FooterOptions & { template?: import('./render.js').FooterTemplate }} opts
+ * The footer HTML using the @latest template (or `version`, e.g. '0.5.0' or 'bundled'). Use this on the server.
+ * @param {import('./render.js').FooterOptions & { template?: import('./render.js').FooterTemplate, version?: string, templateUrl?: string }} opts
  */
 export async function footerHtml(opts) {
-  const template = opts.template ?? (await latestTemplate());
+  const template = opts.template ?? (await latestTemplate({ version: opts.version, url: opts.templateUrl }));
   return renderFooter(template, opts);
 }
 

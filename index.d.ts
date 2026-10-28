@@ -67,11 +67,24 @@ export declare const DEFAULT_RING: Required<RingOptions>;
 export declare const DEFAULT_OWNER: { name: string; url: string };
 export declare const bundledTemplate: FooterTemplate;
 
-export declare function footerHtml(opts: FooterOptions & { template?: FooterTemplate }): Promise<string>;
+export interface TemplateSourceOptions {
+  /**
+   * Pin the CDN template: an exact version ('0.5.0') is immutable on jsDelivr, so a later (or
+   * compromised) publish cannot change this site's footer; 'bundled' never fetches; default 'latest'.
+   * Fleet-wide alternative: the PROFULLSTACK_FOOTER_VERSION env var.
+   */
+  version?: string;
+  /** Full template URL; wins over `version`. */
+  templateUrl?: string;
+}
+export declare function templateUrl(version?: string): string;
+export declare function footerHtml(opts: FooterOptions & TemplateSourceOptions & { template?: FooterTemplate }): Promise<string>;
 export declare function footerHtmlSync(opts: FooterOptions): string;
 export declare function renderFooter(template: FooterTemplate, opts: FooterOptions): string;
 export declare function latestTemplate(opts?: {
   url?: string;
+  /** '0.5.0', 'latest' (default) or 'bundled'. */
+  version?: string;
   ttlMs?: number;
   timeoutMs?: number;
   fetch?: typeof fetch;
@@ -83,4 +96,9 @@ export declare function canonicalSite(site: string): string;
 export declare function descriptor(opts: DescriptorOptions): Descriptor;
 export declare function descriptorResponse(opts: DescriptorOptions): Response;
 export declare function escapeHtml(value: unknown): string;
+/** Allowlist HTML sanitizer used on every CDN template. */
 export declare function sanitizeTemplate(html: string): string;
+export declare function sanitizeHtml(html: string, opts?: { styleToken?: string; textTokens?: string[] }): string;
+export declare function sanitizeCss(css: string): string;
+/** http(s), mailto or relative URL, normalized; null when anything else. */
+export declare function safeUrl(url: string): string | null;

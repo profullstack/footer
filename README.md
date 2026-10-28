@@ -75,6 +75,29 @@ npx @profullstack/footer html --site https://example.com/ --link Docs=/docs
 | `subscribe` | `true` | `false` hides the newsletter form |
 | `badges` | `[]` | `{ href, src, alt, width?, height? }[]`: badges only this site shows, after the house badges |
 | `nonce` | | CSP nonce for the inline `<style>`; or `css: false` and style `.pfs-footer*` yourself |
+| `version` | `latest` | which CDN template to render: `'0.5.0'` pins one (see below), `'bundled'` never fetches |
+| `templateUrl` | | full template URL; wins over `version` |
+
+## Pinning the template version
+
+By default every site follows `@latest`, which is the point of the package, but it also means a bad
+or compromised npm publish reaches every site within the cache window. A site that holds secrets
+(a secret manager, an admin app) should pin an exact version instead. jsDelivr serves an exact
+version immutably, so later publishes cannot change that site's footer:
+
+```js
+import { footerHtml } from '@profullstack/footer';
+const footer = await footerHtml({ site: 'https://app.example.com/', version: '0.5.0' });
+```
+
+```jsx
+<Footer site="https://app.example.com/" version="0.5.0" />
+```
+
+Or for a whole deployment without code changes: `PROFULLSTACK_FOOTER_VERSION=0.5.0`
+(`PROFULLSTACK_FOOTER_VERSION=bundled` renders the copy in the install and never fetches).
+`latestTemplate({ version })` and `templateUrl(version)` are exported too; the CLI takes
+`--template-version 0.5.0`. Bump the pin when you want a new footer.
 
 Theme it with `--pfs-footer-muted`, `--pfs-footer-gap` and `--pfs-footer-size` on
 `.pfs-footer`; colors otherwise inherit from the page.
@@ -117,10 +140,20 @@ Bump `renderer` (and `RENDERER` in render.js) only when the template needs a
 placeholder older installs cannot fill; they keep their bundled template until
 reinstalled.
 
-**Safety:** remote templates are sanitized before use (no `<script>`, `<iframe>`,
-event handlers or `javascript:` URLs; CSS cannot close its `<style>` or `@import`),
-and option values are always escaped.
+**Safety:** since 0.5.0 the filled template goes through an **allowlist** sanitizer
+(`sanitizeHtml`), not a regex blacklist. It tokenizes the HTML the way a browser does and
+rebuilds it: only `footer div nav section aside header p span small strong em b i ul ol li a img
+br hr h2-h6` survive; attributes are limited to `class title role lang dir aria-* data-pfs-*`
+plus `href rel target hreflang` on `a` and `src alt width height loading decoding` on `img`;
+every value is entity-decoded, checked and re-escaped, so what was checked is what the browser
+sees; `href`/`src` must be `http:`, `https:`, `mailto:` or relative after decoding and removing
+control characters. Comments, unknown tags (text kept, escaped), and `script`/`style`/`iframe`/
+`svg`/`math`/`noscript`/`template`/... with their contents are dropped. The only `<style>` and
+`<form>` in the output are the ones render.js builds. CSS (`sanitizeCss`) loses markup, escapes,
+comments, `@import`, `expression(`, `behavior:`, `-moz-binding` and any `url()` that is not
+https or relative. Option values are always escaped.
 
-Env: `PROFULLSTACK_FOOTER_OFFLINE=1` never fetches; `PROFULLSTACK_FOOTER_TEMPLATE_URL` overrides the CDN URL.
+Env: `PROFULLSTACK_FOOTER_OFFLINE=1` never fetches; `PROFULLSTACK_FOOTER_VERSION` pins the
+template version; `PROFULLSTACK_FOOTER_TEMPLATE_URL` overrides the CDN URL.
 
 MIT © Profullstack, Inc.
