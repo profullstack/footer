@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.6.2',
+  version: '0.6.3',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -47,6 +47,7 @@ export default {
     '{{#css}}<style{{#nonce}} nonce="{{nonce}}"{{/nonce}}>{{{css}}}</style>{{/css}}',
     '<div class="pfs-footer__inner">',
     '{{#links}}<nav class="pfs-footer__links" aria-label="Footer">{{{links}}}</nav>{{/links}}',
+    '<nav class="pfs-footer__links" aria-label="Profullstack products"><a href="https://crawlproof.com/surveys">CrawlProof Surveys</a></nav>',
     '<nav class="webring pfs-footer__ring" aria-label="{{ring_name}} webring">',
     '<a href="{{previous}}" rel="prev" title="Previous site">&lt;&lt;</a>',
     '<a href="{{ring}}">{{ring_name}}</a>',
