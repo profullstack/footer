@@ -67,7 +67,9 @@ test('links, since, tagline, owner and css:false', () => {
 });
 
 test('no links means no links nav', () => {
-  assert.ok(!renderFooter(template, { site: 'a.test', houseLinks: false }).includes('<nav class="pfs-footer__links"'));
+  const html = renderFooter(template, { site: 'a.test', houseLinks: false });
+  assert.ok(!html.includes('<nav class="pfs-footer__links" aria-label="Footer"'));
+  assert.ok(html.includes('<nav class="pfs-footer__links" aria-label="Profullstack products"><a href="https://crawlproof.com/surveys">CrawlProof Surveys</a></nav>'));
 });
 
 test('escaping: options can never inject markup', () => {
