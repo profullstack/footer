@@ -436,6 +436,7 @@ export function fill(tpl, vars) {
  *   nonce?: string,
  *   subscribe?: boolean,
  *   badges?: FooterBadge[],
+ *   pwamartHref?: string,
  * }} FooterOptions
  * @typedef {{ version: string, renderer: number, css: string, link: string, footer: string, houseLinks?: FooterLink[] }} FooterTemplate
  */
@@ -450,6 +451,11 @@ export function renderFooter(template, opts) {
   const owner = { ...DEFAULT_OWNER, ...(opts.owner ?? {}) };
   const hops = ringLinks(opts.site, ring);
   const year = opts.year ?? new Date().getUTCFullYear();
+  const defaultPwamartHref = `https://pwamart.com/for?site=${encodeURIComponent(canonicalSite(opts.site))}`;
+  const requestedPwamartHref = opts.pwamartHref ? safeUrl(opts.pwamartHref) : null;
+  const pwamartHref = requestedPwamartHref && /^https:\/\//i.test(requestedPwamartHref)
+    ? requestedPwamartHref
+    : defaultPwamartHref;
   const all = [...(opts.links ?? []), ...(opts.houseLinks === false ? [] : (template.houseLinks ?? []))];
   const links = all
     .filter((l) => l && l.href && l.label && safeUrl(l.href) !== null)
@@ -474,6 +480,7 @@ export function renderFooter(template, opts) {
     owner_url: owner.url,
     tagline: opts.tagline ?? '',
     site: canonicalSite(opts.site),
+    pwamart_href: pwamartHref,
     name: opts.name ?? '',
     nonce: opts.nonce ?? '',
     subscribe: subscribe ? subTok : '',

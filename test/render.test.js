@@ -77,7 +77,7 @@ test('the built.indie badge links the listing for this site, server-rendered', (
   const html = renderFooter(template, { site: 'https://www.a.test/blog' });
   assert.ok(html.includes('<a class="pfs-footer__badge" href="https://built.indie.pit.world/for?site=https://www.a.test/">'));
   assert.ok(html.includes('src="https://built.indie.pit.world/for.svg?site=https://www.a.test/"'));
-  assert.ok(html.includes('<a class="pfs-footer__badge pfs-footer__badge--pwamart" href="https://pwamart.com/for?site=https://www.a.test/">'));
+  assert.ok(html.includes('<a class="pfs-footer__badge pfs-footer__badge--pwamart" href="https://pwamart.com/for?site=https%3A%2F%2Fwww.a.test%2F">'));
   assert.ok(html.includes('src="https://pwamart.com/for.svg?site=https://www.a.test/" alt="Get it on pwamart" width="200" height="44" loading="lazy"'));
 });
 
@@ -177,4 +177,21 @@ test('site badges drop unsafe URLs and escape attributes', () => {
   assert.equal(html.split('pfs-footer__badge--site"').length - 1, 1);
   assert.ok(html.includes('href="https://x.test/?a=&quot;b&quot;"'));
   assert.ok(html.includes('alt="&quot;&gt;&lt;script&gt;" loading="lazy"'));
+});
+
+test('PwaMart badge can point to a publisher profile and rejects unsafe overrides', () => {
+  const html = renderFooter(template, {
+    site: 'https://profullstack.com/',
+    year: 2026,
+    pwamartHref: 'https://pwamart.com/publishers/profullstack',
+  });
+  assert.ok(html.includes('class="pfs-footer__badge pfs-footer__badge--pwamart" href="https://pwamart.com/publishers/profullstack"'));
+
+  const fallback = renderFooter(template, {
+    site: 'https://profullstack.com/',
+    year: 2026,
+    pwamartHref: 'javascript:alert(1)',
+  });
+  assert.ok(fallback.includes('href="https://pwamart.com/for?site=https%3A%2F%2Fprofullstack.com%2F"'));
+  assert.ok(!fallback.includes('javascript:'));
 });

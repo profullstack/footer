@@ -32,6 +32,8 @@ export interface FooterOptions {
   subscribe?: boolean;
   /** Badges only this site shows, after the house badges (e.g. a game's Foundplay badge). */
   badges?: FooterBadge[];
+  /** Destination for the shared PwaMart badge; defaults to the site's PwaMart listing. */
+  pwamartHref?: string;
 }
 export interface FooterTemplate {
   version: string;
@@ -69,7 +71,7 @@ export declare const bundledTemplate: FooterTemplate;
 
 export interface TemplateSourceOptions {
   /**
-   * Pin the CDN template: an exact version ('0.6.0') is immutable on jsDelivr, so a later (or
+   * Pin the CDN template: an exact version ('0.6.1') is immutable on jsDelivr, so a later (or
    * compromised) publish cannot change this site's footer; 'bundled' never fetches; default 'latest'.
    * Fleet-wide alternative: the PROFULLSTACK_FOOTER_VERSION env var.
    */
@@ -83,7 +85,7 @@ export declare function footerHtmlSync(opts: FooterOptions): string;
 export declare function renderFooter(template: FooterTemplate, opts: FooterOptions): string;
 export declare function latestTemplate(opts?: {
   url?: string;
-  /** '0.6.0', 'latest' (default) or 'bundled'. */
+  /** '0.6.1', 'latest' (default) or 'bundled'. */
   version?: string;
   ttlMs?: number;
   timeoutMs?: number;
