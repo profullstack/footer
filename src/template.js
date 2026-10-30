@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.5.0',
+  version: '0.6.0',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -59,10 +59,20 @@ export default {
     // Per-site badges (the `badges` option, e.g. a game's Foundplay badge), built and escaped by render.js.
     '{{{badges}}}',
     '</div>',
+    '<p class="pfs-footer__copy"><a href="tel:+18885264640">Phone: +1-888-526-4640</a></p>',
     '<p class="pfs-footer__copy">&copy; {{years}} <a href="{{owner_url}}">{{owner_name}}</a>{{#tagline}} &middot; {{tagline}}{{/tagline}}</p>',
     '</div>',
     '</footer>',
   ].join(''),
-  // Links every site shows after its own, e.g. a house status page.
-  houseLinks: [],
+  // Shared Profullstack links every site shows after any site-specific links.
+  houseLinks: [
+    { label: 'Terms', href: 'https://profullstack.com/terms' },
+    { label: 'Privacy', href: 'https://profullstack.com/privacy' },
+    { label: 'Media', href: 'https://profullstack.com/media' },
+    { label: 'GitHub', href: 'https://github.com/profullstack', rel: 'noopener noreferrer' },
+    { label: 'Discord', href: 'https://discord.gg/U7dEXfBA3s', rel: 'noopener noreferrer' },
+    { label: 'X', href: 'https://x.com/profullstackinc', rel: 'noopener noreferrer' },
+    { label: 'PairUX', href: 'https://pairux.com/@profullstack', rel: 'noopener noreferrer' },
+    { label: 'Moshcoding', href: 'https://pairux.com/@moshcoding', rel: 'noopener noreferrer' },
+  ],
 };
