@@ -32,7 +32,7 @@ export const TEMPLATE_URL = 'https://cdn.jsdelivr.net/npm/@profullstack/footer@l
 
 /**
  * The CDN template URL for a version. `latest` (the default) follows every release; an exact version
- * such as '0.5.0' is immutable on jsDelivr, so a compromised later publish cannot reach the site;
+ * such as '0.6.0' is immutable on jsDelivr, so a compromised later publish cannot reach the site;
  * 'bundled' never fetches and renders the copy shipped in this install.
  * @param {string} [version]
  */
@@ -89,7 +89,7 @@ function usable(t) {
  * The newest template this install can render. Never throws and never waits
  * longer than `timeoutMs`: a slow or broken CDN gives the bundled template.
  *
- * `version` pins the CDN template ('0.5.0'); 'bundled' never fetches. Also settable fleet-wide with
+ * `version` pins the CDN template ('0.6.0'); 'bundled' never fetches. Also settable fleet-wide with
  * the PROFULLSTACK_FOOTER_VERSION env var. Default: @latest.
  *
  * @param {{ url?: string, version?: string, ttlMs?: number, timeoutMs?: number, fetch?: typeof fetch, now?: () => number }} [opts]
@@ -180,7 +180,7 @@ export function resetTemplateCache() {
 }
 
 /**
- * The footer HTML using the @latest template (or `version`, e.g. '0.5.0' or 'bundled'). Use this on the server.
+ * The footer HTML using the @latest template (or `version`, e.g. '0.6.0' or 'bundled'). Use this on the server.
  * @param {import('./render.js').FooterOptions & { template?: import('./render.js').FooterTemplate, version?: string, templateUrl?: string }} opts
  */
 export async function footerHtml(opts) {

@@ -71,11 +71,11 @@ npx @profullstack/footer html --site https://example.com/ --link Docs=/docs
 | `tagline` | | after the copyright, e.g. `MIT licensed` |
 | `ring` | `{ slug: 'profullstack', name: 'Profullstack', host: 'https://rssamplifier.com' }` | |
 | `css` | `true` | `false` drops the `<style>`; style `.pfs-footer*` yourself |
-| `houseLinks` | `true` | `false` hides links the template adds for every site |
+| `houseLinks` | `true` | `false` hides the shared Terms, Privacy, Media, GitHub, Discord, X, PairUX and Moshcoding links |
 | `subscribe` | `true` | `false` hides the newsletter form |
 | `badges` | `[]` | `{ href, src, alt, width?, height? }[]`: badges only this site shows, after the house badges |
 | `nonce` | | CSP nonce for the inline `<style>`; or `css: false` and style `.pfs-footer*` yourself |
-| `version` | `latest` | which CDN template to render: `'0.5.0'` pins one (see below), `'bundled'` never fetches |
+| `version` | `latest` | which CDN template to render: `'0.6.0'` pins one (see below), `'bundled'` never fetches |
 | `templateUrl` | | full template URL; wins over `version` |
 
 ## Pinning the template version
@@ -87,17 +87,17 @@ version immutably, so later publishes cannot change that site's footer:
 
 ```js
 import { footerHtml } from '@profullstack/footer';
-const footer = await footerHtml({ site: 'https://app.example.com/', version: '0.5.0' });
+const footer = await footerHtml({ site: 'https://app.example.com/', version: '0.6.0' });
 ```
 
 ```jsx
-<Footer site="https://app.example.com/" version="0.5.0" />
+<Footer site="https://app.example.com/" version="0.6.0" />
 ```
 
-Or for a whole deployment without code changes: `PROFULLSTACK_FOOTER_VERSION=0.5.0`
+Or for a whole deployment without code changes: `PROFULLSTACK_FOOTER_VERSION=0.6.0`
 (`PROFULLSTACK_FOOTER_VERSION=bundled` renders the copy in the install and never fetches).
 `latestTemplate({ version })` and `templateUrl(version)` are exported too; the CLI takes
-`--template-version 0.5.0`. Bump the pin when you want a new footer.
+`--template-version 0.6.0`. Bump the pin when you want a new footer.
 
 Theme it with `--pfs-footer-muted`, `--pfs-footer-gap` and `--pfs-footer-size` on
 `.pfs-footer`; colors otherwise inherit from the page.
@@ -131,6 +131,13 @@ profullstack-footer template                                  # the @latest temp
 profullstack-footer check https://example.com/                # does the live page link the ring?
 ```
 
+## Shared contact and links
+
+Every site gets links to Profullstack's Terms, Privacy and Media pages, GitHub, Discord and X,
+plus the PairUX and Moshcoding profiles. The footer also shows the Telnyx toll-free number
+`+1-888-526-4640` as a click-to-call link. The eight shared links can be hidden with
+`houseLinks: false`; the phone line is part of the global contact footer.
+
 ## Changing the footer for every site
 
 Edit `src/template.js`, bump the version in it and in package.json, `npm run build`,
@@ -146,8 +153,9 @@ rebuilds it: only `footer div nav section aside header p span small strong em b 
 br hr h2-h6` survive; attributes are limited to `class title role lang dir aria-* data-pfs-*`
 plus `href rel target hreflang` on `a` and `src alt width height loading decoding` on `img`;
 every value is entity-decoded, checked and re-escaped, so what was checked is what the browser
-sees; `href`/`src` must be `http:`, `https:`, `mailto:` or relative after decoding and removing
-control characters. Comments, unknown tags (text kept, escaped), and `script`/`style`/`iframe`/
+sees; `href` accepts `http:`, `https:`, `mailto:`, `tel:` or relative URLs; `src` accepts
+`http:`, `https:`, `mailto:` or relative URLs, after decoding and removing control characters.
+Comments, unknown tags (text kept, escaped), and `script`/`style`/`iframe`/
 `svg`/`math`/`noscript`/`template`/... with their contents are dropped. The only `<style>` and
 `<form>` in the output are the ones render.js builds. CSS (`sanitizeCss`) loses markup, escapes,
 comments, `@import`, `expression(`, `behavior:`, `-moz-binding` and any `url()` that is not

@@ -116,7 +116,7 @@ export function years(since, year) {
 // filled HTML the way a browser does and rebuilds it from scratch: only the
 // tags and attributes listed here survive, every attribute value is decoded
 // and re-escaped (so what was checked is exactly what the browser sees), URLs
-// must be http(s), mailto or relative, comments and everything else are
+// must be http(s), mailto, tel (links only) or relative, comments and everything else are
 // dropped, and text is re-escaped. Unknown tags are removed but their text is
 // kept; script-like containers are removed with their content.
 // ---------------------------------------------------------------------------
@@ -138,7 +138,7 @@ const TAG_ATTRS = {
   img: new Set(['src', 'alt', 'width', 'height', 'loading', 'decoding']),
 };
 const URL_ATTRS = new Set(['href', 'src']);
-const URL_SCHEMES = new Set(['http', 'https', 'mailto']);
+const URL_SCHEMES = new Set(['http', 'https', 'mailto', 'tel']);
 /** @type {Record<string, RegExp>} */
 const ATTR_VALUES = {
   target: /^(_blank|_self|_parent|_top)$/i,
@@ -185,7 +185,7 @@ function escapeText(t) {
 }
 
 /**
- * A URL that can only navigate or load: http(s), mailto, or relative (path, ?query, #fragment).
+ * A URL that can only navigate or load: http(s), mailto, tel, or relative (path, ?query, #fragment).
  * Returns the normalized URL to emit, or null to drop the attribute.
  * @param {string} raw the DECODED attribute value
  */
@@ -355,7 +355,7 @@ export function sanitizeHtml(html, opts = {}) {
       let v = stripTokens(decodeEntities(raw));
       if (URL_ATTRS.has(k)) {
         const u = safeUrl(v);
-        if (u === null) continue;
+        if (u === null || (k === 'src' && /^tel:/i.test(u))) continue;
         v = u;
       }
       if (ATTR_VALUES[k] && !ATTR_VALUES[k].test(v)) continue;
