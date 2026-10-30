@@ -19,7 +19,7 @@ const HELP = `usage: profullstack-footer <html|json|descriptor|template|check> [
   --tagline <text>    short line after the copyright
   --slug <slug>       ring member slug (descriptor; default host with dashes)
   --offline           use the bundled template, do not fetch @latest
-  --template-version  fetch this exact template version (e.g. 0.5.0) instead of @latest
+  --template-version  fetch this exact template version (e.g. 0.6.1) instead of @latest
   --no-css            leave the <style> out
   --no-subscribe      leave the newsletter form out
 `;
