@@ -71,7 +71,7 @@ npx @profullstack/footer html --site https://example.com/ --link Docs=/docs
 | `tagline` | | after the copyright, e.g. `MIT licensed` |
 | `ring` | `{ slug: 'profullstack', name: 'Profullstack', host: 'https://rssamplifier.com' }` | |
 | `css` | `true` | `false` drops the `<style>`; style `.pfs-footer*` yourself |
-| `houseLinks` | `true` | `false` hides the shared Terms, Privacy, Media, GitHub, Discord, X, PairUX and Moshcoding links |
+| `houseLinks` | `true` | `false` hides the shared Terms, Privacy, Media, GitHub, Discord, X, Events, PairUX and Moshcoding links |
 | `subscribe` | `true` | `false` hides the newsletter form |
 | `badges` | `[]` | `{ href, src, alt, width?, height? }[]`: badges only this site shows, after the house badges |
 | `pwamartHref` | site's PwaMart listing | Override the shared PwaMart badge destination, e.g. a publisher profile |
@@ -134,11 +134,12 @@ profullstack-footer check https://example.com/                # does the live pa
 
 ## Shared contact and links
 
-Every site gets links to Profullstack's Terms, Privacy and Media pages, GitHub, Discord and X,
-plus the PairUX and Moshcoding profiles. The copyright line includes the small Profullstack icon.
+Every site gets links to Profullstack's Terms, Privacy and Media pages, GitHub,
+Discord and X, the Events calendar on Luma, plus the PairUX and Moshcoding
+profiles. The copyright line includes the small Profullstack icon.
 The footer also shows the Telnyx toll-free number `+1-888-526-4640` as a click-to-call link. Pass `pwamartHref:
 'https://pwamart.com/publishers/profullstack'` to point the PwaMart badge at a publisher
-profile. The eight shared links can be hidden with `houseLinks: false`; the phone line is part
+profile. The nine shared links can be hidden with `houseLinks: false`; the phone line is part
 of the global contact footer.
 
 ## Changing the footer for every site

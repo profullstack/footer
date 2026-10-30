@@ -39,7 +39,10 @@ test('the rendered footer carries << Profullstack >> and no random or vote link'
   assert.ok(!/random\?from=|Random site|\/vote"|Vote for this site|pfs-footer__icon/.test(html));
   assert.ok(!/<svg/i.test(html), 'icons are CSS masks, never inline svg');
   assert.ok(html.includes('next?from=https%3A%2F%2Fdiskpush.com%2F'));
-  assert.match(html, /&copy; 2026 <a href="https:\/\/profullstack.com\/">Profullstack, Inc.<\/a>/);
+  assert.match(
+    html,
+    /&copy; 2026 <a class="pfs-footer__brand" href="https:\/\/profullstack.com\/" title="Profullstack, Inc\."><img src="https:\/\/profullstack.com\/assets\/logo\.svg"[^>]*><\/a> <a href="https:\/\/profullstack.com\/">Profullstack, Inc\.<\/a>/,
+  );
   assert.match(html, /<style>\.pfs-footer/);
   assert.doesNotMatch(html, /\{\{/);
 });

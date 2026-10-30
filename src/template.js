@@ -74,6 +74,7 @@ export default {
     { label: 'GitHub', href: 'https://github.com/profullstack', rel: 'noopener noreferrer' },
     { label: 'Discord', href: 'https://discord.gg/U7dEXfBA3s', rel: 'noopener noreferrer' },
     { label: 'X', href: 'https://x.com/profullstackinc', rel: 'noopener noreferrer' },
+    { label: 'Events', href: 'https://luma.com/profullstack', rel: 'noopener noreferrer' },
     { label: 'PairUX', href: 'https://pairux.com/@profullstack', rel: 'noopener noreferrer' },
     { label: 'Moshcoding', href: 'https://pairux.com/@moshcoding', rel: 'noopener noreferrer' },
   ],
