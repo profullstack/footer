@@ -52,6 +52,7 @@ test('links, since, tagline, owner and css:false', () => {
     tagline: 'MIT licensed',
     owner: { name: 'Acme <Co>' },
     links: [{ label: 'Docs', href: '/docs' }, { label: 'X', href: 'javascript:alert(1)' }, { label: 'GH', href: 'https://github.com/x', rel: 'me' }],
+    houseLinks: false,
     css: false,
   });
   assert.ok(html.includes('<nav class="pfs-footer__links" aria-label="Footer"><a href="/docs">Docs</a><a href="https://github.com/x" rel="me">GH</a></nav>'));
@@ -63,7 +64,7 @@ test('links, since, tagline, owner and css:false', () => {
 });
 
 test('no links means no links nav', () => {
-  assert.ok(!renderFooter(template, { site: 'a.test' }).includes('<nav class="pfs-footer__links"'));
+  assert.ok(!renderFooter(template, { site: 'a.test', houseLinks: false }).includes('<nav class="pfs-footer__links"'));
 });
 
 test('escaping: options can never inject markup', () => {
