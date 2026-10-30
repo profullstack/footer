@@ -74,8 +74,9 @@ npx @profullstack/footer html --site https://example.com/ --link Docs=/docs
 | `houseLinks` | `true` | `false` hides the shared Terms, Privacy, Media, GitHub, Discord, X, PairUX and Moshcoding links |
 | `subscribe` | `true` | `false` hides the newsletter form |
 | `badges` | `[]` | `{ href, src, alt, width?, height? }[]`: badges only this site shows, after the house badges |
+| `pwamartHref` | site's PwaMart listing | Override the shared PwaMart badge destination, e.g. a publisher profile |
 | `nonce` | | CSP nonce for the inline `<style>`; or `css: false` and style `.pfs-footer*` yourself |
-| `version` | `latest` | which CDN template to render: `'0.6.0'` pins one (see below), `'bundled'` never fetches |
+| `version` | `latest` | which CDN template to render: `'0.6.1'` pins one (see below), `'bundled'` never fetches |
 | `templateUrl` | | full template URL; wins over `version` |
 
 ## Pinning the template version
@@ -87,17 +88,17 @@ version immutably, so later publishes cannot change that site's footer:
 
 ```js
 import { footerHtml } from '@profullstack/footer';
-const footer = await footerHtml({ site: 'https://app.example.com/', version: '0.6.0' });
+const footer = await footerHtml({ site: 'https://app.example.com/', version: '0.6.1' });
 ```
 
 ```jsx
-<Footer site="https://app.example.com/" version="0.6.0" />
+<Footer site="https://app.example.com/" version="0.6.1" />
 ```
 
-Or for a whole deployment without code changes: `PROFULLSTACK_FOOTER_VERSION=0.6.0`
+Or for a whole deployment without code changes: `PROFULLSTACK_FOOTER_VERSION=0.6.1`
 (`PROFULLSTACK_FOOTER_VERSION=bundled` renders the copy in the install and never fetches).
 `latestTemplate({ version })` and `templateUrl(version)` are exported too; the CLI takes
-`--template-version 0.6.0`. Bump the pin when you want a new footer.
+`--template-version 0.6.1`. Bump the pin when you want a new footer.
 
 Theme it with `--pfs-footer-muted`, `--pfs-footer-gap` and `--pfs-footer-size` on
 `.pfs-footer`; colors otherwise inherit from the page.
@@ -135,8 +136,10 @@ profullstack-footer check https://example.com/                # does the live pa
 
 Every site gets links to Profullstack's Terms, Privacy and Media pages, GitHub, Discord and X,
 plus the PairUX and Moshcoding profiles. The footer also shows the Telnyx toll-free number
-`+1-888-526-4640` as a click-to-call link. The eight shared links can be hidden with
-`houseLinks: false`; the phone line is part of the global contact footer.
+`+1-888-526-4640` as a click-to-call link. Pass `pwamartHref:
+'https://pwamart.com/publishers/profullstack'` to point the PwaMart badge at a publisher
+profile. The eight shared links can be hidden with `houseLinks: false`; the phone line is part
+of the global contact footer.
 
 ## Changing the footer for every site
 

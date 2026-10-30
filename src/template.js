@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.6.0',
+  version: '0.6.1',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -55,7 +55,7 @@ export default {
     '<div class="pfs-footer__news">{{{subscribe}}}<a class="pfs-footer__sublink" href="https://pit.world/subscribe?site={{site}}">Newsletter</a></div>',
     '<div class="pfs-footer__badges">',
     '<a class="pfs-footer__badge" href="https://built.indie.pit.world/for?site={{site}}"><img src="https://built.indie.pit.world/for.svg?site={{site}}" alt="Listed on built.indie" width="200" height="44" loading="lazy"></a>',
-    '<a class="pfs-footer__badge pfs-footer__badge--pwamart" href="https://pwamart.com/for?site={{site}}"><img src="https://pwamart.com/for.svg?site={{site}}" alt="Get it on pwamart" width="200" height="44" loading="lazy"></a>',
+    '<a class="pfs-footer__badge pfs-footer__badge--pwamart" href="{{pwamart_href}}"><img src="https://pwamart.com/for.svg?site={{site}}" alt="Get it on pwamart" width="200" height="44" loading="lazy"></a>',
     // Per-site badges (the `badges` option, e.g. a game's Foundplay badge), built and escaped by render.js.
     '{{{badges}}}',
     '</div>',
