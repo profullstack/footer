@@ -135,8 +135,8 @@ profullstack-footer check https://example.com/                # does the live pa
 ## Shared contact and links
 
 Every site gets links to Profullstack's Terms, Privacy and Media pages, GitHub, Discord and X,
-plus the PairUX and Moshcoding profiles. The footer also shows the Telnyx toll-free number
-`+1-888-526-4640` as a click-to-call link. Pass `pwamartHref:
+plus the PairUX and Moshcoding profiles. The copyright line includes the small Profullstack icon.
+The footer also shows the Telnyx toll-free number `+1-888-526-4640` as a click-to-call link. Pass `pwamartHref:
 'https://pwamart.com/publishers/profullstack'` to point the PwaMart badge at a publisher
 profile. The eight shared links can be hidden with `houseLinks: false`; the phone line is part
 of the global contact footer.

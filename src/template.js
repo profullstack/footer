@@ -38,6 +38,8 @@ export default {
     '.pfs-footer__msg[data-state=error]{color:#d92d20;color:light-dark(#b42318,#f97066)}',
     '.pfs-footer__copy{margin:0;color:var(--pfs-footer-muted)}',
     '.pfs-footer__copy a{color:inherit}',
+    '.pfs-footer__brand{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;margin-inline:.35rem;padding:2px 4px;border-radius:3px;background:#202124;line-height:0}',
+    '.pfs-footer__brand img{display:block;width:20px;height:11px;max-width:none}',
   ].join(''),
   link: '<a href="{{href}}"{{#rel}} rel="{{rel}}"{{/rel}}>{{label}}</a>',
   footer: [
@@ -60,7 +62,7 @@ export default {
     '{{{badges}}}',
     '</div>',
     '<p class="pfs-footer__copy"><a href="tel:+18885264640">Phone: +1-888-526-4640</a></p>',
-    '<p class="pfs-footer__copy">&copy; {{years}} <a href="{{owner_url}}">{{owner_name}}</a>{{#tagline}} &middot; {{tagline}}{{/tagline}}</p>',
+    '<p class="pfs-footer__copy">&copy; {{years}} <a class="pfs-footer__brand" href="https://profullstack.com/" title="Profullstack, Inc."><img src="https://profullstack.com/assets/logo.svg" alt="" width="20" height="11" loading="lazy"></a> <a href="{{owner_url}}">{{owner_name}}</a>{{#tagline}} &middot; {{tagline}}{{/tagline}}</p>',
     '</div>',
     '</footer>',
   ].join(''),
