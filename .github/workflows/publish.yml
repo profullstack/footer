@@ -112,10 +112,16 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          for _ in $(seq 1 30); do
-            for f in template.json src/embed.js src/index.js src/render.js src/template.js; do
-              curl -fsS "https://purge.jsdelivr.net/npm/@profullstack/footer@latest/$f" -o /dev/null || true
-            done
+          for attempt in $(seq 1 30); do
+            # jsDelivr rate-limits repeated purges. Refresh all runtime entry
+            # points once, then retry after five minutes only if @latest is
+            # still stale instead of submitting five purge requests every
+            # twenty seconds for the full ten-minute window.
+            if [ "$attempt" = 1 ] || [ "$attempt" = 16 ]; then
+              for f in template.json src/embed.js src/index.js src/render.js src/template.js; do
+                curl -fsS "https://purge.jsdelivr.net/npm/@profullstack/footer@latest/$f" -o /dev/null || true
+              done
+            fi
             sleep 20
             got="$(curl -fsSI https://cdn.jsdelivr.net/npm/@profullstack/footer@latest/template.json | tr -d '\r' | awk -F': ' 'tolower($1)=="x-jsd-version"{print $2}')"
             if [ "$got" = "$VERSION" ]; then echo "jsDelivr @latest serves $VERSION"; exit 0; fi
