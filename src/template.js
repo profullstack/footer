@@ -58,8 +58,8 @@ export default {
     // it and show the plain link instead; when the form is there, CSS hides the link.
     '<div class="pfs-footer__news">{{{subscribe}}}<a class="pfs-footer__sublink" href="https://pit.world/subscribe?site={{site}}">Newsletter</a></div>',
     '<div class="pfs-footer__badges">',
-    '<a class="pfs-footer__badge pfs-footer__badge--built-indie pfs-footer__badge--square" href="https://built.indie.pit.world/for?site={{site}}"><img src="https://built.indie.pit.world/favicon.svg" alt="Find this site on built.indie" width="48" height="48" loading="lazy"></a>',
-    '<a class="pfs-footer__badge pfs-footer__badge--pwamart pfs-footer__badge--square" href="{{pwamart_href}}"><img src="https://pwamart.com/favicon.svg" alt="Find this site on PwaMart" width="48" height="48" loading="lazy"></a>',
+    '<a class="pfs-footer__badge pfs-footer__badge--built-indie pfs-footer__badge--square" href="https://built.indie.pit.world/for?site={{site}}"><img src="https://profullstack.com/media/built-indie.svg" alt="Find this site on built.indie" width="48" height="48" loading="lazy"></a>',
+    '<a class="pfs-footer__badge pfs-footer__badge--pwamart pfs-footer__badge--square" href="{{pwamart_href}}"><img src="https://profullstack.com/media/pwamart.svg" alt="Find this site on PwaMart" width="48" height="48" loading="lazy"></a>',
     // Per-site badges (the `badges` option, e.g. a game's Foundplay badge), built and escaped by render.js.
     '{{{badges}}}',
     '</div>',

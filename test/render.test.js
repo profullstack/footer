@@ -80,10 +80,10 @@ test('escaping: options can never inject markup', () => {
 
 test('the built.indie badge links the listing for this site, server-rendered', () => {
   const html = renderFooter(template, { site: 'https://www.a.test/blog' });
-  assert.ok(html.includes('<a class="pfs-footer__badge" href="https://built.indie.pit.world/for?site=https://www.a.test/">'));
-  assert.ok(html.includes('src="https://built.indie.pit.world/for.svg?site=https://www.a.test/"'));
-  assert.ok(html.includes('<a class="pfs-footer__badge pfs-footer__badge--pwamart" href="https://pwamart.com/for?site=https%3A%2F%2Fwww.a.test%2F">'));
-  assert.ok(html.includes('src="https://pwamart.com/for.svg?site=https://www.a.test/" alt="Get it on pwamart" width="200" height="44" loading="lazy"'));
+  assert.ok(html.includes('<a class="pfs-footer__badge pfs-footer__badge--built-indie pfs-footer__badge--square" href="https://built.indie.pit.world/for?site=https://www.a.test/">'));
+  assert.ok(html.includes('src="https://profullstack.com/media/built-indie.svg" alt="Find this site on built.indie" width="48" height="48" loading="lazy"'));
+  assert.ok(html.includes('<a class="pfs-footer__badge pfs-footer__badge--pwamart pfs-footer__badge--square" href="https://pwamart.com/for?site=https%3A%2F%2Fwww.a.test%2F">'));
+  assert.ok(html.includes('src="https://profullstack.com/media/pwamart.svg" alt="Find this site on PwaMart" width="48" height="48" loading="lazy"'));
 });
 
 test('sanitizeTemplate strips script, handlers and javascript: urls', () => {
@@ -190,7 +190,7 @@ test('PwaMart badge can point to a publisher profile and rejects unsafe override
     year: 2026,
     pwamartHref: 'https://pwamart.com/publishers/profullstack',
   });
-  assert.ok(html.includes('class="pfs-footer__badge pfs-footer__badge--pwamart" href="https://pwamart.com/publishers/profullstack"'));
+  assert.ok(html.includes('class="pfs-footer__badge pfs-footer__badge--pwamart pfs-footer__badge--square" href="https://pwamart.com/publishers/profullstack"'));
 
   const fallback = renderFooter(template, {
     site: 'https://profullstack.com/',
