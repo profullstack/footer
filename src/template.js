@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.6.9',
+  version: '0.6.10',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -40,6 +40,7 @@ export default {
     '.pfs-footer__msg[data-state=error]{color:#d92d20;color:light-dark(#b42318,#f97066)}',
     '.pfs-footer__copy{margin:0;color:var(--pfs-footer-muted)}',
     '.pfs-footer__copy a{color:inherit}',
+    '.pfs-footer__tagline{display:inline-block;white-space:nowrap}',
     '.pfs-footer__brand{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;margin-inline:.35rem;padding:2px 4px;border-radius:3px;background:#202124;line-height:0}',
     '.pfs-footer__brand img{display:block;width:20px;height:11px;max-width:none}',
   ].join(''),
@@ -62,7 +63,7 @@ export default {
     // SVG links only for the pages that pass a destination.
     '{{#badges}}<div class="pfs-footer__badges">{{{badges}}}</div>{{/badges}}',
     '<p class="pfs-footer__copy"><a href="tel:+18885264640">Phone: +1-888-526-4640</a></p>',
-    '<p class="pfs-footer__copy">&copy; {{years}} <a class="pfs-footer__brand" href="https://profullstack.com/" title="Profullstack, Inc."><img src="https://profullstack.com/assets/logo.svg" alt="" width="20" height="11" loading="lazy"></a> <a href="{{owner_url}}">{{owner_name}}</a>{{#tagline}} &middot; {{tagline}}{{/tagline}}</p>',
+    '<p class="pfs-footer__copy">&copy; {{years}} <a class="pfs-footer__brand" href="https://profullstack.com/" title="Profullstack, Inc."><img src="https://profullstack.com/assets/logo.svg" alt="" width="20" height="11" loading="lazy"></a> <a href="{{owner_url}}">{{owner_name}}</a>{{#tagline}} <span class="pfs-footer__tagline">&middot; {{tagline}}</span>{{/tagline}}</p>',
     '</div>',
     '</footer>',
   ].join(''),

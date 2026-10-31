@@ -23,7 +23,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
 
@@ -102,29 +102,35 @@ jobs:
           done
           echo "::warning::published, but the registry does not report @profullstack/footer@$VERSION yet (first publishes can lag several minutes)"
 
-      # Sites fetch template.json from jsDelivr's @latest, which jsDelivr caches
-      # for hours, and jsDelivr learns of a new npm version a little after npm
-      # does: a single purge right after publish can re-cache the OLD version
-      # (0.2.2 sat behind 0.2.1 that way). Purge until @latest reports this one.
-      - name: Purge jsDelivr @latest until it serves this version
+      # Sites fetch template.json from jsDelivr's @latest. Its purge endpoint
+      # rate-limits this path; retry only after the reported cooldown, then
+      # poll until the CDN actually resolves the new package version.
+      - name: Purge jsDelivr @latest and verify the template version
         if: steps.published.outputs.already == 'false'
         continue-on-error: true
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          for attempt in $(seq 1 30); do
-            # jsDelivr rate-limits repeated purges. Refresh all runtime entry
-            # points once, then retry after five minutes only if @latest is
-            # still stale instead of submitting five purge requests every
-            # twenty seconds for the full ten-minute window.
-            if [ "$attempt" = 1 ] || [ "$attempt" = 16 ]; then
-              for f in template.json src/embed.js src/index.js src/render.js src/template.js; do
-                curl -fsS "https://purge.jsdelivr.net/npm/@profullstack/footer@latest/$f" -o /dev/null || true
-              done
+          PURGE_URL="https://purge.jsdelivr.net/npm/@profullstack/footer@latest/template.json"
+          CDN_URL="https://cdn.jsdelivr.net/npm/@profullstack/footer@latest/template.json"
+          get_reset() {
+            printf '%s' "$1" | node -e 'let s="";process.stdin.on("data",d=>s+=d);process.stdin.on("end",()=>{try{const p=JSON.parse(s).paths?.["/npm/@profullstack/footer@latest/template.json"];console.log(Number(p?.throttlingReset)||0)}catch{console.log(0)}})'
+          }
+          purge_response="$(curl -sS "$PURGE_URL" || true)"
+          reset="$(get_reset "$purge_response")"
+          if [ "$reset" -gt 0 ]; then
+            echo "jsDelivr rate-limited the purge; retrying after ${reset}s"
+            sleep "$((reset + 5))"
+            purge_response="$(curl -sS "$PURGE_URL" || true)"
+            reset="$(get_reset "$purge_response")"
+            if [ "$reset" -gt 0 ]; then
+              echo "::warning::jsDelivr still rate-limited the purge for ${reset}s"
             fi
-            sleep 20
-            got="$(curl -fsSI https://cdn.jsdelivr.net/npm/@profullstack/footer@latest/template.json | tr -d '\r' | awk -F': ' 'tolower($1)=="x-jsd-version"{print $2}')"
+          fi
+          for attempt in $(seq 1 60); do
+            got="$(curl -fsSI "$CDN_URL" | tr -d '\r' | awk -F': ' 'tolower($1)=="x-jsd-version"{print $2}')"
             if [ "$got" = "$VERSION" ]; then echo "jsDelivr @latest serves $VERSION"; exit 0; fi
-            echo "jsDelivr @latest still on ${got:-?}, purging again"
+            echo "jsDelivr @latest still on ${got:-?} (attempt $attempt/60)"
+            sleep 20
           done
-          echo "::warning::jsDelivr @latest did not reach $VERSION in 10 minutes; purge by hand"
+          echo "::warning::jsDelivr @latest did not reach $VERSION in 20 minutes; verify and purge by hand"

@@ -32,7 +32,7 @@ test('ringLinks encodes the site as from= on all three hops', () => {
 });
 
 test('the rendered footer carries << Profullstack >> and no random or vote link', () => {
-  const html = renderFooter(template, { site: 'https://diskpush.com/', year: 2026 });
+  const html = renderFooter(template, { site: 'https://diskpush.com/', year: 2026, tagline: 'Free, open source (MIT)' });
   assert.match(html, /rel="prev"[^>]*>&lt;&lt;<\/a>/);
   assert.match(html, />Profullstack<\/a>/);
   assert.match(html, /rel="next"[^>]*>&gt;&gt;<\/a>/);
@@ -43,6 +43,8 @@ test('the rendered footer carries << Profullstack >> and no random or vote link'
     html,
     /&copy; 2026 <a class="pfs-footer__brand" href="https:\/\/profullstack.com\/" title="Profullstack, Inc\."><img src="https:\/\/profullstack.com\/assets\/logo\.svg"[^>]*><\/a> <a href="https:\/\/profullstack.com\/">Profullstack, Inc\.<\/a>/,
   );
+  assert.ok(html.includes('<span class="pfs-footer__tagline">&middot; Free, open source (MIT)</span>'));
+  assert.ok(template.css.includes('.pfs-footer__tagline{display:inline-block;white-space:nowrap}'));
   assert.match(html, /<style>\.pfs-footer/);
   assert.doesNotMatch(html, /\{\{/);
 });
@@ -62,7 +64,7 @@ test('links, since, tagline, owner and css:false', () => {
   assert.ok(!html.includes('javascript:'));
   assert.ok(html.includes('2024–2026'));
   assert.ok(html.includes('Acme &lt;Co&gt;'));
-  assert.ok(html.includes(' &middot; MIT licensed'));
+  assert.ok(html.includes(' <span class="pfs-footer__tagline">&middot; MIT licensed</span>'));
   assert.ok(!html.includes('<style>'));
 });
 
