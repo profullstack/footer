@@ -85,6 +85,28 @@ function usable(t) {
   );
 }
 
+/** Compare stable numeric package versions; return null for non-semver versions. */
+function compareVersions(a, b) {
+  const parse = (value) => {
+    const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(String(value ?? ''));
+    return match ? match.slice(1).map(Number) : null;
+  };
+  const left = parse(a);
+  const right = parse(b);
+  if (!left || !right) return null;
+  for (let i = 0; i < left.length; i++) {
+    if (left[i] !== right[i]) return left[i] < right[i] ? -1 : 1;
+  }
+  return 0;
+}
+
+/** Keep the default moving alias from regressing behind this install or a cached newer template. */
+function latestCandidate(candidate, cache) {
+  let current = bundled;
+  if (cache.template && compareVersions(cache.template.version, current.version) > 0) current = cache.template;
+  return compareVersions(candidate.version, current.version) < 0 ? current : candidate;
+}
+
 /**
  * The newest template this install can render. Never throws and never waits
  * longer than `timeoutMs`: a slow or broken CDN gives the bundled template.
@@ -128,7 +150,7 @@ export async function latestTemplate(opts = {}) {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const t = await res.json();
       if (!usable(t)) throw new Error('template not usable by this renderer');
-      cache.template = t;
+      cache.template = url === TEMPLATE_URL ? latestCandidate(t, cache) : t;
       cache.until = (opts.now ?? Date.now)() + ttl;
     } catch {
       cache.template = cache.template ?? bundled;
@@ -166,9 +188,9 @@ async function fetchFresh(opts, url, cache, now) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const t = await res.json();
     if (!usable(t)) throw new Error('template not usable by this renderer');
-    cache.template = t;
+    cache.template = url === TEMPLATE_URL ? latestCandidate(t, cache) : t;
     cache.until = now + (opts.ttlMs ?? DEFAULT_TTL_MS);
-    return t;
+    return cache.template;
   } catch {
     return cache.template ?? bundled;
   }

@@ -15,6 +15,25 @@ test('uses the fetched @latest template', async () => {
   assert.ok(html.includes('>Status</a>'));
 });
 
+test('a stale @latest edge cannot replace this install with an older template', async () => {
+  const stale = { ...remote, version: '0.0.1' };
+  assert.equal((await latestTemplate({ fetch: ok(stale) })).version, bundledTemplate.version);
+
+  resetTemplateCache();
+  assert.equal((await latestTemplate({ version: '0.0.1', fetch: ok(stale) })).version, '0.0.1');
+
+  resetTemplateCache();
+  const real = globalThis.fetch;
+  globalThis.fetch = ok(stale);
+  process.env.NEXT_RUNTIME = 'nodejs';
+  try {
+    assert.equal((await latestTemplate()).version, bundledTemplate.version);
+  } finally {
+    delete process.env.NEXT_RUNTIME;
+    globalThis.fetch = real;
+  }
+});
+
 test('caches within the ttl', async () => {
   let calls = 0;
   const f = async () => (calls++, new Response(JSON.stringify(remote)));
