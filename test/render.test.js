@@ -138,10 +138,11 @@ test('the shared footer hides legacy Pit footer fragments on the same page', () 
 
 test('the newsletter form posts the hostname to the fixed endpoint, no script needed', () => {
   const html = renderFooter(template, { site: 'https://www.a.test/blog' });
-  assert.ok(html.includes('<form class="pfs-footer__sub" action="https://pit.world/subscribe" method="post" autocomplete="off">'));
+  assert.ok(html.includes('<form class="pfs-footer__sub" action="https://pit.world/subscribe" method="post">'));
   assert.ok(html.includes('<input type="hidden" name="site" value="www.a.test">'));
-  assert.ok(html.includes('<label for="pfs-footer-email">Email</label><input id="pfs-footer-email" type="email" name="email" required maxlength="254" autocomplete="off" data-bwignore="true" data-1p-ignore="true" data-lpignore="true" placeholder="you@example.com"'));
+  assert.ok(html.includes('<label for="pfs-footer-email">Email</label><input id="pfs-footer-email" type="email" name="email" required maxlength="254" autocomplete="email" placeholder="you@example.com"'));
   assert.ok(!html.includes('autocomplete="username"'), 'do not advertise the newsletter field as a login');
+  assert.ok(!/data-(?:bwignore|1p-ignore|lpignore)=/.test(html), 'do not tell password managers to ignore the newsletter form');
   assert.ok(html.indexOf('name="email"') < html.indexOf('name="website"'), 'keep the honeypot after the real email field');
   assert.ok(html.includes('<button type="submit">Subscribe</button>'));
   // The fallback link is in the markup too; CSS hides it next to the form.
