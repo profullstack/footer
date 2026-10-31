@@ -82,11 +82,13 @@ export function subscribeForm(site, nonce) {
 const SAFE_URL = /^\s*(https?:\/\/|\/(?![/\\]))/i;
 
 /**
- * Badges only this site shows, after the house badges: an image link each. Only http(s) or
+ * Badges only this site shows: an image link each. Only http(s) or
  * root-relative URLs; anything else is dropped.
  * @param {FooterBadge[] | undefined} badges
+ * @param {'site' | 'publisher'} [kind]
  */
-export function siteBadges(badges) {
+export function siteBadges(badges, kind = 'site') {
+  const badgeClass = kind === 'publisher' ? 'publisher' : 'site';
   return (badges ?? [])
     .filter((b) => b && b.href && b.src && SAFE_URL.test(b.href) && SAFE_URL.test(b.src))
     .map((b) => {
@@ -95,7 +97,7 @@ export function siteBadges(badges) {
         .map((k) => ` ${k}="${Math.round(Number(b[k]))}"`)
         .join('');
       return (
-        `<a class="pfs-footer__badge pfs-footer__badge--site" href="${escapeHtml(b.href)}">` +
+        `<a class="pfs-footer__badge pfs-footer__badge--${badgeClass}" href="${escapeHtml(b.href)}">` +
         `<img src="${escapeHtml(b.src)}" alt="${escapeHtml(b.alt ?? '')}"${size} loading="lazy"></a>`
       );
     })
@@ -437,6 +439,7 @@ export function fill(tpl, vars) {
  *   subscribe?: boolean,
  *   badges?: FooterBadge[],
  *   pwamartHref?: string,
+ *   builtIndieHref?: string,
  * }} FooterOptions
  * @typedef {{ version: string, renderer: number, css: string, link: string, footer: string, houseLinks?: FooterLink[] }} FooterTemplate
  */
@@ -451,11 +454,22 @@ export function renderFooter(template, opts) {
   const owner = { ...DEFAULT_OWNER, ...(opts.owner ?? {}) };
   const hops = ringLinks(opts.site, ring);
   const year = opts.year ?? new Date().getUTCFullYear();
-  const defaultPwamartHref = `https://pwamart.com/for?site=${encodeURIComponent(canonicalSite(opts.site))}`;
-  const requestedPwamartHref = opts.pwamartHref ? safeUrl(opts.pwamartHref) : null;
-  const pwamartHref = requestedPwamartHref && /^https:\/\//i.test(requestedPwamartHref)
-    ? requestedPwamartHref
-    : defaultPwamartHref;
+  const publisherBadges = [
+    opts.builtIndieHref && {
+      href: opts.builtIndieHref,
+      src: 'https://logicsrc.com/openicon/set/hq/svg/built-indie.svg',
+      alt: 'Find this site on built.indie',
+      width: 32,
+      height: 32,
+    },
+    opts.pwamartHref && {
+      href: opts.pwamartHref,
+      src: 'https://logicsrc.com/openicon/set/hq/svg/pwamart.svg',
+      alt: 'Find this site on PwaMart',
+      width: 32,
+      height: 32,
+    },
+  ].filter(Boolean);
   const all = [...(opts.links ?? []), ...(opts.houseLinks === false ? [] : (template.houseLinks ?? []))];
   const links = all
     .filter((l) => l && l.href && l.label && safeUrl(l.href) !== null)
@@ -480,11 +494,10 @@ export function renderFooter(template, opts) {
     owner_url: owner.url,
     tagline: opts.tagline ?? '',
     site: canonicalSite(opts.site),
-    pwamart_href: pwamartHref,
     name: opts.name ?? '',
     nonce: opts.nonce ?? '',
     subscribe: subscribe ? subTok : '',
-    badges: siteBadges(opts.badges),
+    badges: siteBadges(publisherBadges, 'publisher') + siteBadges(opts.badges),
   });
   return sanitizeHtml(filled, { styleToken: cssTok, textTokens: [subTok] }).split(cssTok).join(css).split(subTok).join(subscribe);
 }

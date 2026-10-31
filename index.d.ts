@@ -30,10 +30,12 @@ export interface FooterOptions {
   nonce?: string;
   /** false hides the newsletter form (it posts to SUBSCRIBE_URL; CSP form-action must allow https://pit.world). */
   subscribe?: boolean;
-  /** Badges only this site shows, after the house badges (e.g. a game's Foundplay badge). */
+  /** Optional badges shown only on this site (e.g. a game's Foundplay badge). */
   badges?: FooterBadge[];
-  /** Destination for the shared PwaMart badge; defaults to the site's PwaMart listing. */
+  /** Opt in to the OpenIcon HQ PwaMart mark with this destination. */
   pwamartHref?: string;
+  /** Opt in to the OpenIcon HQ built.indie mark with this destination. */
+  builtIndieHref?: string;
 }
 export interface FooterTemplate {
   version: string;
@@ -64,7 +66,7 @@ export declare const SUBSCRIBE_URL: string;
 export declare function subscribeForm(site: string, nonce?: string): string;
 /** The form's browser half: posts JSON to pit.world/api/subscribe and reports inline. Inlined by subscribeForm. */
 export declare function wireSubscribe(form: HTMLFormElement | null): void;
-export declare function siteBadges(badges?: FooterBadge[]): string;
+export declare function siteBadges(badges?: FooterBadge[], kind?: 'site' | 'publisher'): string;
 export declare const DEFAULT_RING: Required<RingOptions>;
 export declare const DEFAULT_OWNER: { name: string; url: string };
 export declare const bundledTemplate: FooterTemplate;
