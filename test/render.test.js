@@ -172,6 +172,11 @@ test('publisher badges are absent by default and can opt into OpenIcon HQ marks'
   assert.ok(template.css.includes('.pfs-footer__badge--publisher img{width:32px;height:32px'));
 });
 
+test('shared footer includes the Profullstack pro directory', () => {
+  const html = renderFooter(template, { site: 'https://a.test/', year: 2026 });
+  assert.ok(html.includes('href="https://pit.world/pro">Find a pro</a>'));
+});
+
 test('site badges render only on the site that passes them', () => {
   const badge = {
     href: 'https://foundplay.io/games/g?utm_source=badge',
