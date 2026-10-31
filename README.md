@@ -98,6 +98,10 @@ or compromised npm publish reaches every site within the cache window. A site th
 (a secret manager, an admin app) should pin an exact version instead. jsDelivr serves an exact
 version immutably, so later publishes cannot change that site's footer:
 
+When using the moving alias, an edge cache that serves a version older than the installed bundle is
+ignored; the bundled template stays in use until the edge catches up. Explicit version pins remain
+honored.
+
 ```js
 import { footerHtml } from '@profullstack/footer';
 const footer = await footerHtml({ site: 'https://app.example.com/', version: '0.6.10' });
