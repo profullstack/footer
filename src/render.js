@@ -68,10 +68,11 @@ export function ringLinks(site, ring = {}) {
 export function subscribeForm(site, nonce) {
   const host = new URL(canonicalSite(site)).hostname;
   return (
-    `<form class="pfs-footer__sub" action="${SUBSCRIBE_URL}" method="post">` +
+    `<form class="pfs-footer__sub" action="${SUBSCRIBE_URL}" method="post" autocomplete="on">` +
     `<input type="hidden" name="site" value="${escapeHtml(host)}">` +
+    '<label for="pfs-footer-email">Email</label>' +
+    '<input id="pfs-footer-email" type="email" name="email" required maxlength="254" autocomplete="email" placeholder="Email for our newsletter" aria-label="Email address for the Profullstack newsletter">' +
     '<input class="pfs-footer__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">' +
-    '<input type="email" name="email" required maxlength="254" autocomplete="email" placeholder="Email for our newsletter" aria-label="Email address for the Profullstack newsletter">' +
     '<button type="submit">Subscribe</button>' +
     '<span class="pfs-footer__msg" role="status" aria-live="polite"></span>' +
     `<script${nonce ? ` nonce="${escapeHtml(nonce)}"` : ''}>(${wireSubscribe})(document.currentScript.parentNode)</script>` +

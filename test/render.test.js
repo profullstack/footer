@@ -130,9 +130,10 @@ test('nonce lands on the style tag, escaped', () => {
 
 test('the newsletter form posts the hostname to the fixed endpoint, no script needed', () => {
   const html = renderFooter(template, { site: 'https://www.a.test/blog' });
-  assert.ok(html.includes('<form class="pfs-footer__sub" action="https://pit.world/subscribe" method="post">'));
+  assert.ok(html.includes('<form class="pfs-footer__sub" action="https://pit.world/subscribe" method="post" autocomplete="on">'));
   assert.ok(html.includes('<input type="hidden" name="site" value="www.a.test">'));
-  assert.match(html, /<input type="email" name="email" required/);
+  assert.ok(html.includes('<label for="pfs-footer-email">Email</label><input id="pfs-footer-email" type="email" name="email" required maxlength="254" autocomplete="email"'));
+  assert.ok(html.indexOf('name="email"') < html.indexOf('name="website"'), 'keep the honeypot after the real email field for password managers');
   assert.ok(html.includes('<button type="submit">Subscribe</button>'));
   // The fallback link is in the markup too; CSS hides it next to the form.
   assert.ok(html.includes('class="pfs-footer__sublink" href="https://pit.world/subscribe?site=https://www.a.test/"'));
