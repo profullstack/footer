@@ -130,6 +130,12 @@ test('nonce lands on the style tag, escaped', () => {
   assert.ok(renderFooter(template, { site: 'a.test' }).includes('<style>'));
 });
 
+test('the shared footer hides legacy Pit footer fragments on the same page', () => {
+  const html = renderFooter(template, { site: 'a.test' });
+  assert.ok(html.includes('html:has([data-pfs-footer]) [data-pit-footer]'));
+  assert.ok(html.includes('html:has([data-profullstack-footer]) [data-pit-footer]'));
+});
+
 test('the newsletter form posts the hostname to the fixed endpoint, no script needed', () => {
   const html = renderFooter(template, { site: 'https://www.a.test/blog' });
   assert.ok(html.includes('<form class="pfs-footer__sub" action="https://pit.world/subscribe" method="post" autocomplete="off">'));
