@@ -88,7 +88,7 @@ npx @profullstack/footer html --site https://example.com/ --link Docs=/docs
 | `pwamartHref` | | Opt in to a PwaMart icon badge and set its destination |
 | `builtIndieHref` | | Opt in to a built.indie icon badge and set its destination |
 | `nonce` | | CSP nonce for the inline `<style>`; or `css: false` and style `.pfs-footer*` yourself |
-| `version` | `latest` | which CDN template to render: `'0.6.12'` pins one (see below), `'bundled'` never fetches |
+| `version` | `latest` | which CDN template to render: `'0.6.13'` pins one (see below), `'bundled'` never fetches |
 | `templateUrl` | | full template URL; wins over `version` |
 
 ## Pinning the template version
@@ -104,17 +104,17 @@ honored.
 
 ```js
 import { footerHtml } from '@profullstack/footer';
-const footer = await footerHtml({ site: 'https://app.example.com/', version: '0.6.12' });
+const footer = await footerHtml({ site: 'https://app.example.com/' });
 ```
 
 ```jsx
-<Footer site="https://app.example.com/" version="0.6.12" />
+<Footer site="https://app.example.com/" />
 ```
 
-Or for a whole deployment without code changes: `PROFULLSTACK_FOOTER_VERSION=0.6.12`
+Or for a whole deployment without code changes: `PROFULLSTACK_FOOTER_VERSION=0.6.13`
 (`PROFULLSTACK_FOOTER_VERSION=bundled` renders the copy in the install and never fetches).
 `latestTemplate({ version })` and `templateUrl(version)` are exported too; the CLI takes
-`--template-version 0.6.12`. Bump the pin when you want a new footer.
+`--template-version 0.6.13`. Bump the pin when you want a new footer.
 
 Theme it with `--pfs-footer-muted`, `--pfs-footer-gap` and `--pfs-footer-size` on
 `.pfs-footer`; colors otherwise inherit from the page.
