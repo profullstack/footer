@@ -9,12 +9,12 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.6.14',
+  version: '0.6.15',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
     'border-top:1px solid color-mix(in srgb,currentColor 14%,transparent);font-size:var(--pfs-footer-size);line-height:1.5;color:inherit}',
-    'html:has([data-pfs-footer]) [data-pit-footer],html:has([data-profullstack-footer]) [data-pit-footer]{display:none!important}',
+    'html:has([data-pfs-footer]) [data-pit-footer],html:has([data-profullstack-footer]) [data-pit-footer],html:has([data-pfs-footer]) [data-net-footer],html:has([data-profullstack-footer]) [data-net-footer],html:has([data-pfs-footer]) footer:not([data-pfs-footer]):not([data-profullstack-footer]),html:has([data-profullstack-footer]) footer:not([data-pfs-footer]):not([data-profullstack-footer]){display:none!important}',
     '.pfs-footer__inner{max-width:72rem;margin:0 auto;padding:.85rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;text-align:center}',
     '.pfs-footer a{color:var(--pfs-footer-muted);text-decoration:none}',
     '.pfs-footer a:hover,.pfs-footer a:focus-visible{color:inherit;text-decoration:underline}',
