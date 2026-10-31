@@ -9,21 +9,22 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.6.4',
+  version: '0.6.5',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
     'border-top:1px solid color-mix(in srgb,currentColor 14%,transparent);font-size:var(--pfs-footer-size);line-height:1.5;color:inherit}',
-    '.pfs-footer__inner{max-width:72rem;margin:0 auto;padding:1.5rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.75rem;text-align:center}',
+    '.pfs-footer__inner{max-width:72rem;margin:0 auto;padding:.85rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;text-align:center}',
     '.pfs-footer a{color:var(--pfs-footer-muted);text-decoration:none}',
     '.pfs-footer a:hover,.pfs-footer a:focus-visible{color:inherit;text-decoration:underline}',
-    '.pfs-footer__links{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--pfs-footer-gap)}',
-    '.pfs-footer__ring{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.6rem}',
-    '.pfs-footer__badges{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.6rem}',
+    '.pfs-footer__links{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem 1rem}',
+    '.pfs-footer__ring{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.4rem}',
+    '.pfs-footer__badges{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.4rem}',
     '.pfs-footer a.pfs-footer__badge{display:inline-block;line-height:0}',
     '.pfs-footer__badge img{display:block;width:200px;height:44px;max-width:100%}',
     '.pfs-footer__badge--site img{width:auto;height:auto}',
-    '.pfs-footer__badge--square img{width:48px;height:48px;max-width:none;object-fit:contain}',
+    '.pfs-footer__badge--publisher img{width:32px;height:32px;max-width:none;object-fit:contain}',
+    '.pfs-footer__badge--square img{width:32px;height:32px;max-width:none;object-fit:contain}',
     '.pfs-footer__news{display:flex;justify-content:center}',
     '.pfs-footer__sub{display:flex;align-items:center;gap:.35rem;margin:0;flex-wrap:wrap;justify-content:center}',
     '.pfs-footer__sub input[type=email]{font:inherit;font-size:.8125rem;color:inherit;background:transparent;width:13.5rem;max-width:62vw;padding:.2rem .5rem;border:1px solid color-mix(in srgb,currentColor 25%,transparent);border-radius:.35rem}',
@@ -57,12 +58,9 @@ export default {
     // The newsletter form comes from render.js ({{{subscribe}}}). Installs older than 0.3.0 cannot render
     // it and show the plain link instead; when the form is there, CSS hides the link.
     '<div class="pfs-footer__news">{{{subscribe}}}<a class="pfs-footer__sublink" href="https://pit.world/subscribe?site={{site}}">Newsletter</a></div>',
-    '<div class="pfs-footer__badges">',
-    '<a class="pfs-footer__badge pfs-footer__badge--built-indie pfs-footer__badge--square" href="https://built.indie.pit.world/for?site={{site}}"><img src="https://profullstack.com/media/built-indie.svg" alt="Find this site on built.indie" width="48" height="48" loading="lazy"></a>',
-    '<a class="pfs-footer__badge pfs-footer__badge--pwamart pfs-footer__badge--square" href="{{pwamart_href}}"><img src="https://profullstack.com/media/pwamart.svg" alt="Find this site on PwaMart" width="48" height="48" loading="lazy"></a>',
-    // Per-site badges (the `badges` option, e.g. a game's Foundplay badge), built and escaped by render.js.
-    '{{{badges}}}',
-    '</div>',
+    // Publisher and app badges are opt-in. The renderer builds their OpenIcon
+    // SVG links only for the pages that pass a destination.
+    '{{#badges}}<div class="pfs-footer__badges">{{{badges}}}</div>{{/badges}}',
     '<p class="pfs-footer__copy"><a href="tel:+18885264640">Phone: +1-888-526-4640</a></p>',
     '<p class="pfs-footer__copy">&copy; {{years}} <a class="pfs-footer__brand" href="https://profullstack.com/" title="Profullstack, Inc."><img src="https://profullstack.com/assets/logo.svg" alt="" width="20" height="11" loading="lazy"></a> <a href="{{owner_url}}">{{owner_name}}</a>{{#tagline}} &middot; {{tagline}}{{/tagline}}</p>',
     '</div>',

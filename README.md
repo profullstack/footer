@@ -1,5 +1,9 @@
 # @profullstack/footer
 
+**Profullstack Distributed Footer Engine** serves one versioned template to every site. Apps fetch the
+remote JSON template at render time, pass their own links and optional OpenIcon publisher marks, and
+receive sanitized HTML. Agents can use the same small options object from React, Node, or the CLI.
+
 One footer for every Profullstack site: your links, the copyright line, and the
 `<<  Profullstack  >>` webring nav (previous, ring, next).
 
@@ -73,10 +77,11 @@ npx @profullstack/footer html --site https://example.com/ --link Docs=/docs
 | `css` | `true` | `false` drops the `<style>`; style `.pfs-footer*` yourself |
 | `houseLinks` | `true` | `false` hides the shared Terms, Privacy, Media, GitHub, Discord, X, Events, event registration, PairUX and Moshcoding links |
 | `subscribe` | `true` | `false` hides the newsletter form |
-| `badges` | `[]` | `{ href, src, alt, width?, height? }[]`: badges only this site shows, after the house badges |
-| `pwamartHref` | site's PwaMart listing | Override the shared PwaMart badge destination, e.g. a publisher profile |
+| `badges` | `[]` | `{ href, src, alt, width?, height? }[]`: optional badges shown only on this site |
+| `pwamartHref` | | Opt in to a PwaMart icon badge and set its destination |
+| `builtIndieHref` | | Opt in to a built.indie icon badge and set its destination |
 | `nonce` | | CSP nonce for the inline `<style>`; or `css: false` and style `.pfs-footer*` yourself |
-| `version` | `latest` | which CDN template to render: `'0.6.4'` pins one (see below), `'bundled'` never fetches |
+| `version` | `latest` | which CDN template to render: `'0.6.5'` pins one (see below), `'bundled'` never fetches |
 | `templateUrl` | | full template URL; wins over `version` |
 
 ## Pinning the template version
@@ -88,17 +93,17 @@ version immutably, so later publishes cannot change that site's footer:
 
 ```js
 import { footerHtml } from '@profullstack/footer';
-const footer = await footerHtml({ site: 'https://app.example.com/', version: '0.6.4' });
+const footer = await footerHtml({ site: 'https://app.example.com/', version: '0.6.5' });
 ```
 
 ```jsx
-<Footer site="https://app.example.com/" version="0.6.4" />
+<Footer site="https://app.example.com/" version="0.6.5" />
 ```
 
-Or for a whole deployment without code changes: `PROFULLSTACK_FOOTER_VERSION=0.6.4`
+Or for a whole deployment without code changes: `PROFULLSTACK_FOOTER_VERSION=0.6.5`
 (`PROFULLSTACK_FOOTER_VERSION=bundled` renders the copy in the install and never fetches).
 `latestTemplate({ version })` and `templateUrl(version)` are exported too; the CLI takes
-`--template-version 0.6.4`. Bump the pin when you want a new footer.
+`--template-version 0.6.5`. Bump the pin when you want a new footer.
 
 Theme it with `--pfs-footer-muted`, `--pfs-footer-gap` and `--pfs-footer-size` on
 `.pfs-footer`; colors otherwise inherit from the page.
@@ -138,12 +143,19 @@ Every site gets a CrawlProof Surveys link, plus links to Profullstack's Terms,
 Privacy and Media pages, GitHub, Discord and X, the Events calendar on Luma, a
 Luma event registration link, and the PairUX and Moshcoding profiles. The
 copyright line includes the small Profullstack icon.
-The shared footer links square PwaMart and built.indie marks to the site's listing on each service. The Profullstack
-homepage uses those service marks to link to its publisher profiles. The footer also shows the Telnyx toll-free number
-`+1-888-526-4640` as a click-to-call link. Pass `pwamartHref:
-'https://pwamart.com/publishers/profullstack'` to point the PwaMart badge at a publisher
-profile. The ten Profullstack links can be hidden with `houseLinks: false`; the
-CrawlProof Surveys link and phone line are part of the global footer.
+Publisher badges are off by default. Publisher and app pages can opt into the OpenIcon HQ SVG marks:
+
+```jsx
+<Footer
+  site="https://example.com/"
+  pwamartHref="https://pwamart.com/publishers/example"
+  builtIndieHref="https://built.indie.pit.world/p/example"
+/>
+```
+
+The shared footer keeps the site's navigation, house links, newsletter, webring and copyright. Its compact
+layout leaves publisher marks on the pages that opt in. The Profullstack homepage uses the two service
+icons for its publisher profiles. The global phone line remains a click-to-call link.
 
 ## Changing the footer for every site
 

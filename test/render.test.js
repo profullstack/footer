@@ -78,12 +78,11 @@ test('escaping: options can never inject markup', () => {
   assert.ok(!/<img src=x|<script/i.test(html.replace(/<script>\(function wireSubscribe[\s\S]*?<\/script>/, '')));
 });
 
-test('the built.indie badge links the listing for this site, server-rendered', () => {
+test('publisher badges stay out of the shared footer until a site opts in', () => {
   const html = renderFooter(template, { site: 'https://www.a.test/blog' });
-  assert.ok(html.includes('<a class="pfs-footer__badge pfs-footer__badge--built-indie pfs-footer__badge--square" href="https://built.indie.pit.world/for?site=https://www.a.test/">'));
-  assert.ok(html.includes('src="https://profullstack.com/media/built-indie.svg" alt="Find this site on built.indie" width="48" height="48" loading="lazy"'));
-  assert.ok(html.includes('<a class="pfs-footer__badge pfs-footer__badge--pwamart pfs-footer__badge--square" href="https://pwamart.com/for?site=https%3A%2F%2Fwww.a.test%2F">'));
-  assert.ok(html.includes('src="https://profullstack.com/media/pwamart.svg" alt="Find this site on PwaMart" width="48" height="48" loading="lazy"'));
+  assert.ok(!html.includes('<div class="pfs-footer__badges">'));
+  assert.ok(!html.includes('pfs-footer__badge--built-indie'));
+  assert.ok(!html.includes('pfs-footer__badge--pwamart'));
 });
 
 test('sanitizeTemplate strips script, handlers and javascript: urls', () => {
@@ -154,7 +153,26 @@ test('an install that predates the form (no {{{subscribe}}} filler) shows the pl
   assert.ok(old.includes('<a class="pfs-footer__sublink" href="https://pit.world/subscribe?site=https://a.test/">Newsletter</a>'));
 });
 
-test('site badges render after the house badges, only on the site that passes them', () => {
+test('publisher badges are absent by default and can opt into OpenIcon HQ marks', () => {
+  const defaults = renderFooter(template, { site: 'https://a.test/', year: 2026 });
+  assert.ok(!defaults.includes('<div class="pfs-footer__badges">'));
+  assert.ok(!defaults.includes('pfs-footer__badge--pwamart'));
+  assert.ok(!defaults.includes('pfs-footer__badge--built-indie'));
+
+  const html = renderFooter(template, {
+    site: 'https://a.test/',
+    year: 2026,
+    pwamartHref: 'https://pwamart.com/publishers/a',
+    builtIndieHref: 'https://built.indie.pit.world/p/a',
+  });
+  assert.ok(html.includes('class="pfs-footer__badge pfs-footer__badge--publisher" href="https://pwamart.com/publishers/a"'));
+  assert.ok(html.includes('src="https://logicsrc.com/openicon/set/hq/svg/pwamart.svg"'));
+  assert.ok(html.includes('class="pfs-footer__badge pfs-footer__badge--publisher" href="https://built.indie.pit.world/p/a"'));
+  assert.ok(html.includes('src="https://logicsrc.com/openicon/set/hq/svg/built-indie.svg"'));
+  assert.ok(template.css.includes('.pfs-footer__badge--publisher img{width:32px;height:32px'));
+});
+
+test('site badges render only on the site that passes them', () => {
   const badge = {
     href: 'https://foundplay.io/games/g?utm_source=badge',
     src: 'https://foundplay.io/badge/g.svg',
@@ -164,7 +182,7 @@ test('site badges render after the house badges, only on the site that passes th
   };
   const html = renderFooter(template, { site: 'https://a.test/', year: 2026, badges: [badge] });
   const at = html.indexOf('<a class="pfs-footer__badge pfs-footer__badge--site" href="https://foundplay.io/games/g?utm_source=badge">');
-  assert.ok(at > html.indexOf('pfs-footer__badge--pwamart'));
+  assert.ok(at > -1);
   assert.ok(html.includes('<img src="https://foundplay.io/badge/g.svg" alt="Play G on Foundplay" width="242" height="28" loading="lazy">'));
   assert.ok(!renderFooter(template, { site: 'https://a.test/', year: 2026 }).includes('pfs-footer__badge--site"'));
 });
@@ -184,19 +202,14 @@ test('site badges drop unsafe URLs and escape attributes', () => {
   assert.ok(html.includes('alt="&quot;&gt;&lt;script&gt;" loading="lazy"'));
 });
 
-test('PwaMart badge can point to a publisher profile and rejects unsafe overrides', () => {
+test('publisher badge destinations reject unsafe URLs', () => {
   const html = renderFooter(template, {
     site: 'https://profullstack.com/',
     year: 2026,
-    pwamartHref: 'https://pwamart.com/publishers/profullstack',
-  });
-  assert.ok(html.includes('class="pfs-footer__badge pfs-footer__badge--pwamart pfs-footer__badge--square" href="https://pwamart.com/publishers/profullstack"'));
-
-  const fallback = renderFooter(template, {
-    site: 'https://profullstack.com/',
-    year: 2026,
     pwamartHref: 'javascript:alert(1)',
+    builtIndieHref: 'data:text/html,evil',
   });
-  assert.ok(fallback.includes('href="https://pwamart.com/for?site=https%3A%2F%2Fprofullstack.com%2F"'));
-  assert.ok(!fallback.includes('javascript:'));
+  assert.ok(!html.includes('javascript:'));
+  assert.ok(!html.includes('data:text/html'));
+  assert.ok(!html.includes('<div class="pfs-footer__badges">'));
 });
