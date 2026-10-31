@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.6.11',
+  version: '0.6.12',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -27,9 +27,11 @@ export default {
     '.pfs-footer__badge--square img{width:32px;height:32px;max-width:none;object-fit:contain}',
     '.pfs-footer__news{display:flex;justify-content:center}',
     '.pfs-footer__sub{display:flex;align-items:center;gap:.35rem;margin:0;flex-wrap:wrap;justify-content:center}',
-    '.pfs-footer__sub input[type=email]{font:inherit;font-size:.8125rem;color:inherit;background:transparent;width:13.5rem;max-width:62vw;padding:.2rem .5rem;border:1px solid color-mix(in srgb,currentColor 25%,transparent);border-radius:.35rem}',
+    '.pfs-footer__sub label{font:inherit;font-size:.8125rem;color:var(--pfs-footer-muted)}',
+    '.pfs-footer__sub input[type=email]{box-sizing:border-box;appearance:none;font:inherit;font-size:.875rem;line-height:1.4;color:inherit;background:color-mix(in srgb,currentColor 8%,transparent);width:13.5rem;max-width:62vw;padding:.4rem .65rem;border:0;border-radius:.35rem}',
+    '.pfs-footer__sub input[type=email]:hover{background:color-mix(in srgb,currentColor 11%,transparent)}',
     '.pfs-footer__sub input[type=email]::placeholder{color:var(--pfs-footer-muted);opacity:1}',
-    '.pfs-footer__sub input[type=email]:focus-visible{outline:2px solid color-mix(in srgb,currentColor 45%,transparent);outline-offset:1px}',
+    '.pfs-footer__sub input[type=email]:focus-visible{outline:2px solid color-mix(in srgb,currentColor 58%,transparent);outline-offset:2px}',
     '.pfs-footer__sub button{font:inherit;font-size:.8125rem;color:var(--pfs-footer-muted);background:transparent;padding:.2rem .6rem;border:1px solid color-mix(in srgb,currentColor 25%,transparent);border-radius:.35rem;cursor:pointer}',
     '.pfs-footer__sub button:hover,.pfs-footer__sub button:focus-visible{color:inherit}',
     '.pfs-footer__hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}',

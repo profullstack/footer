@@ -133,7 +133,7 @@ test('the real template still renders the ring, badges, form and style', () => {
   assert.ok(html.includes('<a href="https://rssamplifier.com/ring/profullstack/previous?from=https%3A%2F%2Fa.test%2F" rel="prev" title="Previous site">&lt;&lt;</a>'));
   assert.ok(html.includes('<a href="https://rssamplifier.com/ring/profullstack/next?from=https%3A%2F%2Fa.test%2F" rel="next" title="Next site">&gt;&gt;</a>'));
   assert.ok(html.includes(`<style nonce="n">${template.css}</style>`));
-  assert.ok(html.includes('<form class="pfs-footer__sub" action="https://pit.world/subscribe" method="post" autocomplete="on">'));
+  assert.ok(html.includes('<form class="pfs-footer__sub" action="https://pit.world/subscribe" method="post" autocomplete="off">'));
   assert.ok(html.endsWith('</footer>'));
 });
 

@@ -88,7 +88,7 @@ npx @profullstack/footer html --site https://example.com/ --link Docs=/docs
 | `pwamartHref` | | Opt in to a PwaMart icon badge and set its destination |
 | `builtIndieHref` | | Opt in to a built.indie icon badge and set its destination |
 | `nonce` | | CSP nonce for the inline `<style>`; or `css: false` and style `.pfs-footer*` yourself |
-| `version` | `latest` | which CDN template to render: `'0.6.11'` pins one (see below), `'bundled'` never fetches |
+| `version` | `latest` | which CDN template to render: `'0.6.12'` pins one (see below), `'bundled'` never fetches |
 | `templateUrl` | | full template URL; wins over `version` |
 
 ## Pinning the template version
@@ -104,17 +104,17 @@ honored.
 
 ```js
 import { footerHtml } from '@profullstack/footer';
-const footer = await footerHtml({ site: 'https://app.example.com/', version: '0.6.11' });
+const footer = await footerHtml({ site: 'https://app.example.com/', version: '0.6.12' });
 ```
 
 ```jsx
-<Footer site="https://app.example.com/" version="0.6.11" />
+<Footer site="https://app.example.com/" version="0.6.12" />
 ```
 
-Or for a whole deployment without code changes: `PROFULLSTACK_FOOTER_VERSION=0.6.11`
+Or for a whole deployment without code changes: `PROFULLSTACK_FOOTER_VERSION=0.6.12`
 (`PROFULLSTACK_FOOTER_VERSION=bundled` renders the copy in the install and never fetches).
 `latestTemplate({ version })` and `templateUrl(version)` are exported too; the CLI takes
-`--template-version 0.6.11`. Bump the pin when you want a new footer.
+`--template-version 0.6.12`. Bump the pin when you want a new footer.
 
 Theme it with `--pfs-footer-muted`, `--pfs-footer-gap` and `--pfs-footer-size` on
 `.pfs-footer`; colors otherwise inherit from the page.
@@ -125,6 +125,10 @@ Every footer carries a small email field and a Subscribe button that posts the s
 pit.world. pit.world runs the double opt-in (confirmation email, nothing kept until the click) and
 records which property each subscriber came from (`https://pit.world/admin/subscribers`). The
 endpoint is fixed in render.js, never in the template.
+
+The email control is labeled “Email” and uses the example address placeholder `you@example.com`.
+Its form and input set `autocomplete="off"`; the input also includes ignore hints for Bitwarden,
+1Password, and LastPass so it is not mistaken for a login field.
 
 Since 0.4.0 a small inline script inside the form (`wireSubscribe`) sends it as JSON to
 `https://pit.world/api/subscribe` and reports in place: "Email confirmation sent to you@x. Check your
