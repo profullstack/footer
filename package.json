@@ -1,6 +1,6 @@
 {
   "name": "@profullstack/footer",
-  "version": "0.6.8",
+  "version": "0.6.9",
   "type": "module",
   "description": "Profullstack's distributed footer engine for remote, agent-friendly site branding and navigation.",
   "keywords": ["footer", "webring", "openwebring", "copyright", "react", "nextjs", "hono", "ssr"],
