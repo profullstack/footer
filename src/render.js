@@ -458,14 +458,14 @@ export function renderFooter(template, opts) {
   const publisherBadges = [
     opts.builtIndieHref && {
       href: opts.builtIndieHref,
-      src: 'https://logicsrc.com/openicon/set/hq/svg/built-indie.svg',
+      src: 'https://built.indie.pit.world/favicon.svg',
       alt: 'Find this site on built.indie',
       width: 32,
       height: 32,
     },
     opts.pwamartHref && {
       href: opts.pwamartHref,
-      src: 'https://logicsrc.com/openicon/set/hq/svg/pwamart.svg',
+      src: 'https://pwamart.com/icon.svg',
       alt: 'Find this site on PwaMart',
       width: 32,
       height: 32,

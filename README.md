@@ -158,7 +158,7 @@ Every site gets a CrawlProof Surveys link, plus links to Profullstack's Terms,
 Privacy and Media pages, GitHub, Discord and X, the Events calendar on Luma, a
 Luma event registration link, and the PairUX and Moshcoding profiles. The
 copyright line includes the small Profullstack icon.
-Every site shows the built.indie and PwaMart OpenIcon HQ marks, linked to its own listing (allow `https://logicsrc.com` in your CSP `img-src`). Publisher and app pages can point them elsewhere:
+Every site shows the built.indie and PwaMart icons, linked to its own listing (your CSP `img-src` must allow `https://built.indie.pit.world` and `https://pwamart.com`). Publisher and app pages can point them elsewhere:
 
 ```jsx
 <Footer

@@ -86,8 +86,8 @@ test('every site shows the built.indie and PwaMart icons, linked to its own list
   // The PwaMart link is the site's PwaMart ownership proof: https origin, path "/".
   assert.ok(html.includes('href="https://pwamart.com/for?site=https://www.a.test/"'));
   assert.ok(html.includes('href="https://built.indie.pit.world/for?site=https://www.a.test/"'));
-  assert.ok(html.includes('src="https://logicsrc.com/openicon/set/hq/svg/pwamart.svg"'));
-  assert.ok(html.includes('src="https://logicsrc.com/openicon/set/hq/svg/built-indie.svg"'));
+  assert.ok(html.includes('src="https://pwamart.com/icon.svg"'));
+  assert.ok(html.includes('src="https://built.indie.pit.world/favicon.svg"'));
 });
 
 test('sanitizeTemplate strips script, handlers and javascript: urls', () => {
@@ -179,9 +179,9 @@ test('a site can point the publisher icons elsewhere; CSS then hides the default
     builtIndieHref: 'https://built.indie.pit.world/p/a',
   });
   assert.ok(html.includes('class="pfs-footer__badge pfs-footer__badge--publisher" href="https://pwamart.com/publishers/a"'));
-  assert.ok(html.includes('src="https://logicsrc.com/openicon/set/hq/svg/pwamart.svg"'));
+  assert.ok(html.includes('src="https://pwamart.com/icon.svg"'));
   assert.ok(html.includes('class="pfs-footer__badge pfs-footer__badge--publisher" href="https://built.indie.pit.world/p/a"'));
-  assert.ok(html.includes('src="https://logicsrc.com/openicon/set/hq/svg/built-indie.svg"'));
+  assert.ok(html.includes('src="https://built.indie.pit.world/favicon.svg"'));
   assert.ok(template.css.includes('.pfs-footer__badge--publisher img{width:32px;height:32px'));
 });
 
