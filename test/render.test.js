@@ -80,11 +80,14 @@ test('escaping: options can never inject markup', () => {
   assert.ok(!/<img src=x|<script/i.test(html.replace(/<script>\(function wireSubscribe[\s\S]*?<\/script>/, '')));
 });
 
-test('publisher badges stay out of the shared footer until a site opts in', () => {
+test('every site shows the built.indie and PwaMart icons, linked to its own listing', () => {
   const html = renderFooter(template, { site: 'https://www.a.test/blog' });
-  assert.ok(!html.includes('<div class="pfs-footer__badges">'));
-  assert.ok(!html.includes('pfs-footer__badge--built-indie'));
-  assert.ok(!html.includes('pfs-footer__badge--pwamart'));
+  assert.ok(html.includes('<div class="pfs-footer__badges">'));
+  // The PwaMart link is the site's PwaMart ownership proof: https origin, path "/".
+  assert.ok(html.includes('href="https://pwamart.com/for?site=https://www.a.test/"'));
+  assert.ok(html.includes('href="https://built.indie.pit.world/for?site=https://www.a.test/"'));
+  assert.ok(html.includes('src="https://logicsrc.com/openicon/set/hq/svg/pwamart.svg"'));
+  assert.ok(html.includes('src="https://logicsrc.com/openicon/set/hq/svg/built-indie.svg"'));
 });
 
 test('sanitizeTemplate strips script, handlers and javascript: urls', () => {
@@ -166,11 +169,8 @@ test('an install that predates the form (no {{{subscribe}}} filler) shows the pl
   assert.ok(old.includes('<a class="pfs-footer__sublink" href="https://pit.world/subscribe?site=https://a.test/">Newsletter</a>'));
 });
 
-test('publisher badges are absent by default and can opt into OpenIcon HQ marks', () => {
-  const defaults = renderFooter(template, { site: 'https://a.test/', year: 2026 });
-  assert.ok(!defaults.includes('<div class="pfs-footer__badges">'));
-  assert.ok(!defaults.includes('pfs-footer__badge--pwamart'));
-  assert.ok(!defaults.includes('pfs-footer__badge--built-indie'));
+test('a site can point the publisher icons elsewhere; CSS then hides the defaults', () => {
+  assert.ok(template.css.includes('.pfs-footer__badges:has(.pfs-footer__badge--publisher:not(.pfs-footer__badge--default)) .pfs-footer__badge--default{display:none!important}'));
 
   const html = renderFooter(template, {
     site: 'https://a.test/',
@@ -229,5 +229,5 @@ test('publisher badge destinations reject unsafe URLs', () => {
   });
   assert.ok(!html.includes('javascript:'));
   assert.ok(!html.includes('data:text/html'));
-  assert.ok(!html.includes('<div class="pfs-footer__badges">'));
+  assert.ok(!html.includes('pfs-footer__badge pfs-footer__badge--publisher" href'));
 });
