@@ -85,8 +85,8 @@ npx @profullstack/footer html --site https://example.com/ --link Docs=/docs
 | `houseLinks` | `true` | `false` hides the shared Terms, Privacy, Media, GitHub, Discord, X, Events, event registration, PairUX and Moshcoding links |
 | `subscribe` | `true` | `false` hides the newsletter form |
 | `badges` | `[]` | `{ href, src, alt, width?, height? }[]`: optional badges shown only on this site |
-| `pwamartHref` | | Opt in to a PwaMart icon badge and set its destination |
-| `builtIndieHref` | | Opt in to a built.indie icon badge and set its destination |
+| `pwamartHref` | `https://pwamart.com/for?site=<site>` | Point the PwaMart icon somewhere else (the default is also the site's PwaMart ownership proof) |
+| `builtIndieHref` | `https://built.indie.pit.world/for?site=<site>` | Point the built.indie icon somewhere else |
 | `nonce` | | CSP nonce for the inline `<style>`; or `css: false` and style `.pfs-footer*` yourself |
 | `version` | `latest` | which CDN template to render: `'0.6.13'` pins one (see below), `'bundled'` never fetches |
 | `templateUrl` | | full template URL; wins over `version` |
@@ -158,7 +158,7 @@ Every site gets a CrawlProof Surveys link, plus links to Profullstack's Terms,
 Privacy and Media pages, GitHub, Discord and X, the Events calendar on Luma, a
 Luma event registration link, and the PairUX and Moshcoding profiles. The
 copyright line includes the small Profullstack icon.
-Publisher badges are off by default. Publisher and app pages can opt into the OpenIcon HQ SVG marks:
+Every site shows the built.indie and PwaMart OpenIcon HQ marks, linked to its own listing (allow `https://logicsrc.com` in your CSP `img-src`). Publisher and app pages can point them elsewhere:
 
 ```jsx
 <Footer

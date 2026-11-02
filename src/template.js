@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.6.15',
+  version: '0.6.16',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -21,6 +21,7 @@ export default {
     '.pfs-footer__links{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem 1rem}',
     '.pfs-footer__ring{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.4rem}',
     '.pfs-footer__badges{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.4rem}',
+    '.pfs-footer__badges:has(.pfs-footer__badge--publisher:not(.pfs-footer__badge--default)) .pfs-footer__badge--default{display:none!important}',
     '.pfs-footer a.pfs-footer__badge{display:inline-block;line-height:0}',
     '.pfs-footer__badge img{display:block;width:200px;height:44px;max-width:100%}',
     '.pfs-footer__badge--site img{width:auto;height:auto}',
@@ -62,9 +63,14 @@ export default {
     // The newsletter form comes from render.js ({{{subscribe}}}). Installs older than 0.3.0 cannot render
     // it and show the plain link instead; when the form is there, CSS hides the link.
     '<div class="pfs-footer__news">{{{subscribe}}}<a class="pfs-footer__sublink" href="https://pit.world/subscribe?site={{site}}">Newsletter</a></div>',
-    // Publisher and app badges are opt-in. The renderer builds their OpenIcon
-    // SVG links only for the pages that pass a destination.
-    '{{#badges}}<div class="pfs-footer__badges">{{{badges}}}</div>{{/badges}}',
+    // Every site shows the built.indie and PwaMart icons, linked to its own listing. The PwaMart link
+    // (pwamart.com/for?site=<site>/) is also the site's PwaMart ownership proof. They live in the template,
+    // not the renderer, so every install gets them from the CDN with no redeploy. A site that passes its own
+    // pwamartHref/builtIndieHref (renderer 0.6.5+) gets those instead: CSS hides these defaults then.
+    '<div class="pfs-footer__badges">',
+    '<a class="pfs-footer__badge pfs-footer__badge--publisher pfs-footer__badge--default" href="https://built.indie.pit.world/for?site={{site}}"><img src="https://logicsrc.com/openicon/set/hq/svg/built-indie.svg" alt="Find this site on built.indie" width="32" height="32" loading="lazy"></a>',
+    '<a class="pfs-footer__badge pfs-footer__badge--publisher pfs-footer__badge--default" href="https://pwamart.com/for?site={{site}}"><img src="https://logicsrc.com/openicon/set/hq/svg/pwamart.svg" alt="Find this site on PwaMart" width="32" height="32" loading="lazy"></a>',
+    '{{{badges}}}</div>',
     '<p class="pfs-footer__copy"><a href="tel:+18885264640">Phone: +1-888-526-4640</a></p>',
     '<p class="pfs-footer__copy">&copy; {{years}} <a class="pfs-footer__brand" href="https://profullstack.com/" title="Profullstack, Inc."><img src="https://profullstack.com/assets/logo.svg" alt="" width="20" height="11" loading="lazy"></a> <a href="{{owner_url}}">{{owner_name}}</a>{{#tagline}} <span class="pfs-footer__tagline">&middot; {{tagline}}</span>{{/tagline}}</p>',
     '</div>',
