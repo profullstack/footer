@@ -170,7 +170,9 @@ test('an install that predates the form (no {{{subscribe}}} filler) shows the pl
 });
 
 test('a site can point the publisher icons elsewhere; CSS then hides the defaults', () => {
-  assert.ok(template.css.includes('.pfs-footer__badges:has(.pfs-footer__badge--publisher:not(.pfs-footer__badge--default)) .pfs-footer__badge--default{display:none!important}'));
+  // Per icon: a site that points only its built.indie icon elsewhere keeps the default PwaMart icon.
+  assert.ok(template.css.includes('.pfs-footer__badges:has(.pfs-footer__badge--publisher:not(.pfs-footer__badge--default)[href*="pwamart.com"]) .pfs-footer__badge--default[href^="https://pwamart.com/"]'));
+  assert.ok(template.css.includes('.pfs-footer__badges:has(.pfs-footer__badge--publisher:not(.pfs-footer__badge--default)[href*="built.indie"]) .pfs-footer__badge--default[href^="https://built.indie.pit.world/"]'));
 
   const html = renderFooter(template, {
     site: 'https://a.test/',
