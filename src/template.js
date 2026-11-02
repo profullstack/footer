@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.6.17',
+  version: '0.6.18',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -21,7 +21,7 @@ export default {
     '.pfs-footer__links{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem 1rem}',
     '.pfs-footer__ring{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.4rem}',
     '.pfs-footer__badges{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.4rem}',
-    '.pfs-footer__badges:has(.pfs-footer__badge--publisher:not(.pfs-footer__badge--default)) .pfs-footer__badge--default{display:none!important}',
+    '.pfs-footer__badges:has(.pfs-footer__badge--publisher:not(.pfs-footer__badge--default)[href*="pwamart.com"]) .pfs-footer__badge--default[href^="https://pwamart.com/"],.pfs-footer__badges:has(.pfs-footer__badge--publisher:not(.pfs-footer__badge--default)[href*="built.indie"]) .pfs-footer__badge--default[href^="https://built.indie.pit.world/"]{display:none!important}',
     '.pfs-footer a.pfs-footer__badge{display:inline-block;line-height:0}',
     '.pfs-footer__badge img{display:block;width:200px;height:44px;max-width:100%}',
     '.pfs-footer__badge--site img{width:auto;height:auto}',
