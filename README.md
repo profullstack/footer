@@ -138,7 +138,7 @@ answers with a "check your inbox" page that links back to the site. `embed.js` w
 
 **CSP:** pass the page's `nonce` so the script runs, and allow pit.world:
 `connect-src 'self' https://pit.world; form-action 'self' https://pit.world`. If the request is
-blocked anyway, the form says "Failed: could not reach pit.world" instead of doing nothing.
+blocked anyway, the form says "Failed: could not reach the subscribe service" instead of doing nothing.
 Turn it off with `subscribe: false` (`--no-subscribe`). Installs before 0.3.0 cannot render the
 form; their footer shows a plain "Newsletter" link to the same page instead, from the @latest template.
 

@@ -50,12 +50,12 @@ export function wireSubscribe(form) {
               say('Email confirmation sent to ' + email + '. Check your inbox.', 'ok');
               form.reset();
             } else {
-              say('Failed: ' + (body.error || reasons[body.status] || 'pit.world answered ' + res.status), 'error');
+              say('Failed: ' + (body.error || reasons[body.status] || 'the subscribe service answered ' + res.status), 'error');
             }
           });
       })
       .catch(function (err) {
-        say('Failed: could not reach pit.world (' + ((err && err.message) || err) + ')', 'error');
+        say('Failed: could not reach the subscribe service (' + ((err && err.message) || err) + ')', 'error');
       })
       .then(function () {
         if (button) button.disabled = false;

@@ -79,13 +79,13 @@ test('a refusal says Failed with the reason', async () => {
   assert.equal((await submitWith(reply(400, { ok: false, status: 'undeliverable' }))).msg.textContent, "Failed: that address's domain can't receive email");
   assert.equal((await submitWith(reply(429, { error: 'Too many requests. Try again shortly.' }))).msg.textContent, 'Failed: Too many requests. Try again shortly.');
   const r = await submitWith(reply(502, {}));
-  assert.equal(r.msg.textContent, 'Failed: pit.world answered 502');
+  assert.equal(r.msg.textContent, 'Failed: the subscribe service answered 502');
   assert.equal(r.msg.attrs['data-state'], 'error');
 });
 
 test('a blocked or failed request says so instead of doing nothing', async () => {
   const r = await submitWith(() => Promise.reject(new TypeError('Failed to fetch')));
-  assert.equal(r.msg.textContent, 'Failed: could not reach pit.world (Failed to fetch)');
+  assert.equal(r.msg.textContent, 'Failed: could not reach the subscribe service (Failed to fetch)');
   assert.equal(r.button.disabled, false);
 });
 
