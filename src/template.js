@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.6.16',
+  version: '0.6.17',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -68,8 +68,8 @@ export default {
     // not the renderer, so every install gets them from the CDN with no redeploy. A site that passes its own
     // pwamartHref/builtIndieHref (renderer 0.6.5+) gets those instead: CSS hides these defaults then.
     '<div class="pfs-footer__badges">',
-    '<a class="pfs-footer__badge pfs-footer__badge--publisher pfs-footer__badge--default" href="https://built.indie.pit.world/for?site={{site}}"><img src="https://logicsrc.com/openicon/set/hq/svg/built-indie.svg" alt="Find this site on built.indie" width="32" height="32" loading="lazy"></a>',
-    '<a class="pfs-footer__badge pfs-footer__badge--publisher pfs-footer__badge--default" href="https://pwamart.com/for?site={{site}}"><img src="https://logicsrc.com/openicon/set/hq/svg/pwamart.svg" alt="Find this site on PwaMart" width="32" height="32" loading="lazy"></a>',
+    '<a class="pfs-footer__badge pfs-footer__badge--publisher pfs-footer__badge--default" href="https://built.indie.pit.world/for?site={{site}}"><img src="https://built.indie.pit.world/favicon.svg" alt="Find this site on built.indie" width="32" height="32" loading="lazy"></a>',
+    '<a class="pfs-footer__badge pfs-footer__badge--publisher pfs-footer__badge--default" href="https://pwamart.com/for?site={{site}}"><img src="https://pwamart.com/icon.svg" alt="Find this site on PwaMart" width="32" height="32" loading="lazy"></a>',
     '{{{badges}}}</div>',
     '<p class="pfs-footer__copy"><a href="tel:+18885264640">Phone: +1-888-526-4640</a></p>',
     '<p class="pfs-footer__copy">&copy; {{years}} <a class="pfs-footer__brand" href="https://profullstack.com/" title="Profullstack, Inc."><img src="https://profullstack.com/assets/logo.svg" alt="" width="20" height="11" loading="lazy"></a> <a href="{{owner_url}}">{{owner_name}}</a>{{#tagline}} <span class="pfs-footer__tagline">&middot; {{tagline}}</span>{{/tagline}}</p>',
