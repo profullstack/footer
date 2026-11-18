@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.6.19',
+  version: '0.6.20',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -79,6 +79,7 @@ export default {
   // Shared Profullstack links every site shows after any site-specific links.
   houseLinks: [
     { label: 'Find a pro', href: 'https://pit.world/pro' },
+    { label: 'Book a call', href: 'https://outreachgraph.com/calendar/chovy' },
     { label: 'Terms', href: 'https://profullstack.com/terms' },
     { label: 'Privacy', href: 'https://profullstack.com/privacy' },
     { label: 'Media', href: 'https://profullstack.com/media' },
