@@ -36,7 +36,14 @@ export interface FooterOptions {
   pwamartHref?: string;
   /** Opt in to the OpenIcon HQ built.indie mark with this destination. */
   builtIndieHref?: string;
+  /**
+   * Show the "Listed on the c0mpute gallery" badge in the badge row (off by default). `true` is the
+   * light badge; `{ theme: 'dark' }` the dark one. Keyed by `site` (scheme + host); non-http(s) sites
+   * render nothing. Server-rendered, so the c0mpute.com verifier sees it.
+   */
+  c0mputeBadge?: C0mputeBadgeOption;
 }
+export type C0mputeBadgeOption = boolean | { theme?: 'light' | 'dark' };
 export interface FooterTemplate {
   version: string;
   renderer: number;
@@ -66,6 +73,10 @@ export declare const SUBSCRIBE_URL: string;
 export declare function subscribeForm(site: string, nonce?: string): string;
 /** The form's browser half: posts JSON to pit.world/api/subscribe and reports inline. Inlined by subscribeForm. */
 export declare function wireSubscribe(form: HTMLFormElement | null): void;
+/** The c0mpute gallery badge markup for a site, or '' when off or the site is not http(s). */
+export declare function c0mputeBadge(site: string, option?: C0mputeBadgeOption): string;
+/** The site URL the c0mpute gallery keys by ('https://example.com', no trailing slash), or ''. */
+export declare function c0mputeSiteUrl(site: string): string;
 export declare function siteBadges(badges?: FooterBadge[], kind?: 'site' | 'publisher'): string;
 export declare const DEFAULT_RING: Required<RingOptions>;
 export declare const DEFAULT_OWNER: { name: string; url: string };

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // profullstack-footer: print the footer or the ring descriptor for a site.
 //
-//   profullstack-footer html --site https://example.com/ [--name Example] [--link Docs=/docs]... [--since 2024] [--no-css]
+//   profullstack-footer html --site https://example.com/ [--name Example] [--link Docs=/docs]... [--since 2024] [--no-css] [--c0mpute-badge] [--c0mpute-badge-theme dark]
 //   profullstack-footer json --site https://example.com/      the ring URLs
 //   profullstack-footer descriptor --site https://example.com/ [--slug example-com] [--name Example]
 //   profullstack-footer template                               the @latest template this install would use
@@ -22,6 +22,7 @@ const HELP = `usage: profullstack-footer <html|json|descriptor|template|check> [
   --template-version  fetch this exact template version (e.g. 0.6.1) instead of @latest
   --no-css            leave the <style> out
   --no-subscribe      leave the newsletter form out
+  --c0mpute-badge     add the c0mpute gallery badge (--c0mpute-badge-theme dark for the dark one)
 `;
 
 const { values, positionals } = parseArgs({
@@ -37,6 +38,8 @@ const { values, positionals } = parseArgs({
     'template-version': { type: 'string' },
     'no-css': { type: 'boolean' },
     'no-subscribe': { type: 'boolean' },
+    'c0mpute-badge': { type: 'boolean' },
+    'c0mpute-badge-theme': { type: 'string' },
     help: { type: 'boolean', short: 'h' },
   },
 });
@@ -67,6 +70,10 @@ const opts = () => ({
   tagline: values.tagline,
   css: !values['no-css'],
   subscribe: !values['no-subscribe'],
+  c0mputeBadge:
+    values['c0mpute-badge'] || values['c0mpute-badge-theme']
+      ? { theme: values['c0mpute-badge-theme'] === 'dark' ? 'dark' : 'light' }
+      : false,
   version: values['template-version'],
 });
 

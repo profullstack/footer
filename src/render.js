@@ -105,6 +105,46 @@ export function siteBadges(badges, kind = 'site') {
     .join('');
 }
 
+/**
+ * The site URL the c0mpute gallery keys a listing by: scheme + host, no trailing slash. A bare host
+ * becomes `https://<host>`. Anything that is not http(s) gives ''.
+ * @param {string} site
+ */
+export function c0mputeSiteUrl(site) {
+  const raw = String(site ?? '').trim();
+  if (!raw || /[\s<>"'`]/.test(raw)) return '';
+  // `host:port` with no scheme is still a bare host; any other `x:` is a scheme we refuse.
+  if (/^[a-z][a-z0-9+.-]*:/i.test(raw) && !/^https?:\/\//i.test(raw) && !/^[a-z0-9.-]+:\d+(\/|$)/i.test(raw)) return '';
+  try {
+    const url = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
+    if ((url.protocol !== 'https:' && url.protocol !== 'http:') || !url.hostname || url.username || url.password) return '';
+    return `${url.protocol}//${url.host}`;
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * The "Listed on the c0mpute gallery" badge: a plain link and image (not an ad), server-rendered so
+ * the c0mpute.com verifier, which reads the page HTML, finds it. Keyed by the site URL only.
+ * Returns '' when the badge is off or the site is not an http(s) URL.
+ * @param {string} site
+ * @param {C0mputeBadgeOption} [option] true, or { theme: 'light' | 'dark' }
+ */
+export function c0mputeBadge(site, option = true) {
+  if (!option) return '';
+  const url = c0mputeSiteUrl(site);
+  if (!url) return '';
+  const dark = typeof option === 'object' && option.theme === 'dark';
+  const enc = encodeURIComponent(url);
+  const href = `https://c0mpute.com/gallery?ref=${enc}`;
+  const src = `https://c0mpute.com/badge.svg?url=${enc}${dark ? '&theme=dark' : ''}`;
+  return (
+    `<a class="pfs-footer__badge pfs-footer__badge--c0mpute" href="${escapeHtml(href)}" rel="noopener" data-c0mpute-badge>` +
+    `<img src="${escapeHtml(src)}" alt="Listed on the c0mpute gallery" width="170" height="36" loading="lazy" decoding="async"></a>`
+  );
+}
+
 /** @param {number} since @param {number} year */
 export function years(since, year) {
   return since && since < year ? `${since}–${year}` : String(year);
@@ -441,7 +481,9 @@ export function fill(tpl, vars) {
  *   badges?: FooterBadge[],
  *   pwamartHref?: string,
  *   builtIndieHref?: string,
+ *   c0mputeBadge?: C0mputeBadgeOption,
  * }} FooterOptions
+ * @typedef {boolean | { theme?: 'light' | 'dark' }} C0mputeBadgeOption
  * @typedef {{ version: string, renderer: number, css: string, link: string, footer: string, houseLinks?: FooterLink[] }} FooterTemplate
  */
 
@@ -482,8 +524,12 @@ export function renderFooter(template, opts) {
   const tok = rawToken();
   const cssTok = `${tok}css`;
   const subTok = `${tok}sub`;
+  const c0Tok = `${tok}c0`;
   const css = opts.css === false ? '' : sanitizeCss(template.css);
   const subscribe = opts.subscribe === false ? '' : subscribeForm(opts.site, opts.nonce);
+  // Built here with every value escaped, then swapped in after sanitizing like the form: the allowlist
+  // would strip its data-c0mpute-badge marker.
+  const c0 = opts.c0mputeBadge ? c0mputeBadge(opts.site, opts.c0mputeBadge) : '';
   const filled = fill(String(template.footer ?? ''), {
     version: template.version,
     css: css ? cssTok : '',
@@ -498,9 +544,15 @@ export function renderFooter(template, opts) {
     name: opts.name ?? '',
     nonce: opts.nonce ?? '',
     subscribe: subscribe ? subTok : '',
-    badges: siteBadges(publisherBadges, 'publisher') + siteBadges(opts.badges),
+    badges: siteBadges(publisherBadges, 'publisher') + siteBadges(opts.badges) + (c0 ? c0Tok : ''),
   });
-  return sanitizeHtml(filled, { styleToken: cssTok, textTokens: [subTok] }).split(cssTok).join(css).split(subTok).join(subscribe);
+  return sanitizeHtml(filled, { styleToken: cssTok, textTokens: [subTok, c0Tok] })
+    .split(cssTok)
+    .join(css)
+    .split(subTok)
+    .join(subscribe)
+    .split(c0Tok)
+    .join(c0);
 }
 
 let tokenSeq = 0;
