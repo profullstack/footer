@@ -8,9 +8,24 @@
 //
 // Keep real ring links inside the element: the ring's verifier reads the HTML
 // and never runs this script. `profullstack-footer html --site ...` prints them.
+//
+// data-c0mpute-badge (empty, "true", "light" or "dark") adds the c0mpute gallery
+// badge. Its verifier reads the HTML too, so keep the printed badge
+// (`--c0mpute-badge`) in the fallback markup as well.
 
 import { footerHtml } from './index.js';
 import { wireSubscribe } from './subscribe.js';
+
+/**
+ * data-c0mpute-badge: absent or "false" is off; "dark" is the dark badge; anything else is on.
+ * @param {string | undefined} raw
+ */
+export function c0mputeOption(raw) {
+  if (raw === undefined || raw === null) return undefined;
+  const v = String(raw).trim().toLowerCase();
+  if (v === 'false' || v === 'off' || v === '0') return false;
+  return v === 'dark' ? { theme: 'dark' } : true;
+}
 
 /** @param {string | undefined} raw */
 function parse(raw) {
@@ -34,6 +49,7 @@ export async function mount(root = document) {
       links: parse(d.links),
       owner: parse(d.owner),
       badges: parse(d.badges),
+      c0mputeBadge: c0mputeOption(d.c0mputeBadge),
     });
     const tpl = document.createElement('template');
     tpl.innerHTML = html;

@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.6.20',
+  version: '0.7.0',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -27,6 +27,8 @@ export default {
     '.pfs-footer__badge--site img{width:auto;height:auto}',
     '.pfs-footer__badge--publisher img{width:32px;height:32px;max-width:none;object-fit:contain}',
     '.pfs-footer__badge--square img{width:32px;height:32px;max-width:none;object-fit:contain}',
+    '.pfs-footer__badge--c0mpute img{width:136px;height:auto;aspect-ratio:170/36;max-width:none;opacity:.85}',
+    '.pfs-footer__badge--c0mpute:hover img,.pfs-footer__badge--c0mpute:focus-visible img{opacity:1}',
     '.pfs-footer__news{display:flex;justify-content:center}',
     '.pfs-footer__sub{display:flex;align-items:center;gap:.35rem;margin:0;flex-wrap:wrap;justify-content:center}',
     '.pfs-footer__sub label{font:inherit;font-size:.8125rem;color:var(--pfs-footer-muted)}',

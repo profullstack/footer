@@ -87,6 +87,7 @@ npx @profullstack/footer html --site https://example.com/ --link Docs=/docs
 | `badges` | `[]` | `{ href, src, alt, width?, height? }[]`: optional badges shown only on this site |
 | `pwamartHref` | `https://pwamart.com/for?site=<site>` | Point the PwaMart icon somewhere else (the default is also the site's PwaMart ownership proof) |
 | `builtIndieHref` | `https://built.indie.pit.world/for?site=<site>` | Point the built.indie icon somewhere else |
+| `c0mputeBadge` | `false` | `true` or `{ theme: 'dark' }`: show the c0mpute gallery badge (see below) |
 | `nonce` | | CSP nonce for the inline `<style>`; or `css: false` and style `.pfs-footer*` yourself |
 | `version` | `latest` | which CDN template to render: `'0.6.13'` pins one (see below), `'bundled'` never fetches |
 | `templateUrl` | | full template URL; wins over `version` |
@@ -145,7 +146,7 @@ form; their footer shows a plain "Newsletter" link to the same page instead, fro
 ## CLI
 
 ```sh
-profullstack-footer html --site https://example.com/ [--link Docs=/docs] [--since 2024] [--offline] [--no-css]
+profullstack-footer html --site https://example.com/ [--link Docs=/docs] [--since 2024] [--offline] [--no-css] [--c0mpute-badge]
 profullstack-footer json --site https://example.com/          # the four ring URLs
 profullstack-footer descriptor --site https://example.com/    # /.well-known/openwebring.json
 profullstack-footer template                                  # the @latest template
@@ -171,6 +172,35 @@ Every site shows the built.indie and PwaMart icons, linked to its own listing (y
 The shared footer keeps the site's navigation, house links, newsletter, webring and copyright. Its compact
 layout leaves publisher marks on the pages that opt in. The Profullstack homepage uses the two service
 icons for its publisher profiles. The global phone line remains a click-to-call link.
+
+## c0mpute gallery badge
+
+`c0mputeBadge` (off by default) adds a small "Listed on the c0mpute gallery" badge to the footer's badge
+row, next to the built.indie and PwaMart icons. The badge gets the site listed on
+[c0mpute.com/gallery](https://c0mpute.com/gallery) immediately: the free tier needs the badge (see
+https://c0mpute.com/gallery/submit).
+
+```jsx
+<Footer site="https://example.com/" c0mputeBadge />                       {/* light */}
+<Footer site="https://example.com/" c0mputeBadge={{ theme: 'dark' }} />   {/* dark */}
+```
+
+```js
+const footer = await footerHtml({ site: 'https://example.com/', c0mputeBadge: true });
+```
+
+It renders, server-side, inside the footer HTML (the c0mpute.com verifier reads the page HTML and runs
+no script):
+
+```html
+<a class="pfs-footer__badge pfs-footer__badge--c0mpute" href="https://c0mpute.com/gallery?ref=https%3A%2F%2Fexample.com" rel="noopener" data-c0mpute-badge><img src="https://c0mpute.com/badge.svg?url=https%3A%2F%2Fexample.com" alt="Listed on the c0mpute gallery" width="170" height="36" loading="lazy" decoding="async"></a>
+```
+
+The listing is keyed by the site URL (scheme and host of `site`, no trailing slash; a bare host becomes
+`https://<host>`). A `site` that is not http(s) renders no badge. Your CSP `img-src` must allow
+`https://c0mpute.com`. CLI: `--c0mpute-badge` (add `--c0mpute-badge-theme dark` for the dark one).
+Static pages: `data-c0mpute-badge` (or `data-c0mpute-badge="dark"`) on the embed element, and keep the
+badge printed by the CLI in the fallback markup so the verifier sees it.
 
 ## Changing the footer for every site
 

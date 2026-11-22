@@ -12,6 +12,8 @@ export {
   RENDERER,
   DEFAULT_OWNER,
   DEFAULT_RING,
+  c0mputeBadge,
+  c0mputeSiteUrl,
   canonicalSite,
   descriptor,
   escapeHtml,
