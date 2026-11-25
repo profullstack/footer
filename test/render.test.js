@@ -80,6 +80,12 @@ test('escaping: options can never inject markup', () => {
   assert.ok(!/<img src=x|<script/i.test(html.replace(/<script>\(function wireSubscribe[\s\S]*?<\/script>/, '')));
 });
 
+test('every site shows the SaaSRow icon, linked by its own domain (the backlink a free listing needs)', () => {
+  const html = renderFooter(template, { site: 'https://www.a.test/blog' });
+  assert.ok(html.includes('href="https://saasrow.pwa.pit.world/for?site=https://www.a.test/"'));
+  assert.ok(html.includes('src="https://saasrow.pwa.pit.world/icon-192.png" alt="Find this site on SaaSRow" width="32" height="32"'));
+});
+
 test('every site shows the built.indie and PwaMart icons, linked to its own listing', () => {
   const html = renderFooter(template, { site: 'https://www.a.test/blog' });
   assert.ok(html.includes('<div class="pfs-footer__badges">'));
