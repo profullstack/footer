@@ -239,3 +239,11 @@ test('publisher badge destinations reject unsafe URLs', () => {
   assert.ok(!html.includes('data:text/html'));
   assert.ok(!html.includes('pfs-footer__badge pfs-footer__badge--publisher" href'));
 });
+
+test('every site carries the Profullstack directory badges (their free listings need the backlink)', () => {
+  const html = renderFooter(template, { site: 'https://profullstack.com/' });
+  const row = html.slice(html.indexOf('pfs-footer__directories'));
+  for (const href of ['https://twelve.tools"', 'https://www.aidirectori.es/ai-tools/profullstack"', 'https://aiagentsdirectory.com/agent/profullstack"', 'https://nextbigproduct.com/product/profullstack"']) {
+    assert.ok(row.includes(`href="${href}`), href);
+  }
+});

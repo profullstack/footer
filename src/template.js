@@ -9,7 +9,7 @@
 // render.js does not fill; older installs then keep their bundled template.
 
 export default {
-  version: '0.7.1',
+  version: '0.7.2',
   renderer: 1,
   css: [
     '.pfs-footer{--pfs-footer-muted:color-mix(in srgb,currentColor 62%,transparent);--pfs-footer-gap:.5rem 1.25rem;--pfs-footer-size:.875rem;',
@@ -29,6 +29,8 @@ export default {
     '.pfs-footer__badge--square img{width:32px;height:32px;max-width:none;object-fit:contain}',
     '.pfs-footer__badge--c0mpute img{width:136px;height:auto;aspect-ratio:170/36;max-width:none;opacity:.85}',
     '.pfs-footer__badge--c0mpute:hover img,.pfs-footer__badge--c0mpute:focus-visible img{opacity:1}',
+    '.pfs-footer__directories{margin-top:.4rem}',
+    '.pfs-footer__badge--directory img{width:auto;height:32px;max-width:none}',
     '.pfs-footer__news{display:flex;justify-content:center}',
     '.pfs-footer__sub{display:flex;align-items:center;gap:.35rem;margin:0;flex-wrap:wrap;justify-content:center}',
     '.pfs-footer__sub label{font:inherit;font-size:.8125rem;color:var(--pfs-footer-muted)}',
@@ -76,6 +78,14 @@ export default {
     '<a class="pfs-footer__badge pfs-footer__badge--publisher pfs-footer__badge--default" href="https://pwamart.com/for?site={{site}}"><img src="https://pwamart.com/icon.svg" alt="Find this site on PwaMart" width="32" height="32" loading="lazy"></a>',
     '<a class="pfs-footer__badge pfs-footer__badge--publisher pfs-footer__badge--default" href="https://saasrow.pwa.pit.world/for?site={{site}}"><img src="https://saasrow.pwa.pit.world/icon-192.png" alt="Find this site on SaaSRow" width="32" height="32" loading="lazy"></a>',
     '{{{badges}}}</div>',
+    // Profullstack's own directory listings (2026-11-28). The free listings stay live only while their badge
+    // links back from profullstack.com, and every fleet site carrying them is part of the Profullstack network.
+    '<div class="pfs-footer__badges pfs-footer__directories">',
+    '<a class="pfs-footer__badge pfs-footer__badge--directory" href="https://twelve.tools" rel="noopener"><img src="https://twelve.tools/badge0-white.svg" alt="Featured on Twelve Tools" width="148" height="40" loading="lazy"></a>',
+    '<a class="pfs-footer__badge pfs-footer__badge--directory" href="https://www.aidirectori.es/ai-tools/profullstack" rel="noopener"><img src="https://cdn.aidirectori.es/ai-tools/badges/light-mode.png" alt="AI Directories Badge" width="200" height="46" loading="lazy"></a>',
+    '<a class="pfs-footer__badge pfs-footer__badge--directory" href="https://aiagentsdirectory.com/agent/profullstack" rel="noopener" title="Discover Profullstack on AI Agents Directory"><img src="https://aiagentsdirectory.com/featured-badge.svg?v=2024" alt="Profullstack - Featured on AI Agents Directory" width="200" height="50" loading="lazy"></a>',
+    '<a class="pfs-footer__badge pfs-footer__badge--directory" href="https://nextbigproduct.com/product/profullstack" rel="noopener"><img src="https://nextbigproduct.com/assets/badge/profullstack.svg?theme=light" alt="Featured on NextBigProduct" width="250" height="54" loading="lazy"></a>',
+    '</div>',
     '<p class="pfs-footer__copy"><a href="tel:+18885264640">Phone: +1-888-526-4640</a></p>',
     '<p class="pfs-footer__copy">&copy; {{years}} <a class="pfs-footer__brand" href="https://profullstack.com/" title="Profullstack, Inc."><img src="https://profullstack.com/assets/logo.svg" alt="" width="20" height="11" loading="lazy"></a> <a href="{{owner_url}}">{{owner_name}}</a>{{#tagline}} <span class="pfs-footer__tagline">&middot; {{tagline}}</span>{{/tagline}}</p>',
     '</div>',
